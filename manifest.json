@@ -1,0 +1,10 @@
+{
+	"id": "obsidian-TTRPG-character-view",
+	"name": "TTRPG Character view",
+	"description": "A plugin to view TTRPG character sheets in Obsidian",
+	"author": "Mocca101",
+	"authorUrl": "https://github.com/Mocca101",
+	"version": "0.1.0",
+	"minAppVersion": "0.15.0",
+	"isDesktopOnly": false
+}

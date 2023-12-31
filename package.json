@@ -1,0 +1,37 @@
+{
+	"name": "svelted-obsidian",
+	"private": true,
+	"version": "1.0.0",
+	"main": "main.js",
+	"type": "module",
+	"scripts": {
+		"dev": "vite build --mode development --watch",
+		"build": "vite build --mode production",
+		"lint": "rome check --apply-unsafe .",
+		"format": "rome format --write .",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"test": "npx playwright test"
+	},
+	"devDependencies": {
+		"@tsconfig/svelte": "^4.0.1",
+		"autoprefixer": "^10.4.16",
+		"builtin-modules": "^3.3.0",
+		"dotenv": "^16.3.1",
+		"obsidian": "^1.4.11",
+		"playwright": "^1.40.1",
+		"postcss": "^8.4.32",
+		"rome": "^12.1.3",
+		"selenium-webdriver": "^4.16.0",
+		"svelte": "^4.2.8",
+		"svelte-check": "^3.6.2",
+		"tailwindcss": "^3.3.6",
+		"tslib": "^2.6.2",
+		"typescript": "^5.3.3"
+	},
+	"dependencies": {
+		"@sveltejs/vite-plugin-svelte": "^3.0.1",
+		"lucide-svelte": "^0.279.0",
+		"vite": "^5.0.6",
+		"zod": "^3.22.4"
+	}
+}
