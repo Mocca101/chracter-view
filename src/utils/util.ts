@@ -3,6 +3,7 @@ import type { BaseCheck } from "../types/check";
 import type { Stat } from "../types/stats";
 import { App } from "obsidian";
 import { HeadingSection, ParagraphSection, YamlSection, type SectionType, type SectionedFile, type TypedSection, CodeSection, ThematicBreakSection } from "./file";
+import { parseFile } from "../classes/fileParser";
 
 let app: App;
 
@@ -77,6 +78,9 @@ export function statblockFromString(fileString: string): string {
 
 export async function getSectionedFile(file: TFile): Promise<SectionedFile> {
   const fileString = await app.vault.cachedRead(file);
+
+  const parsedFile = parseFile(fileString);
+  console.log(parsedFile);
   
   // Read cach after to make sure sections are there
   let fileCache = app.metadataCache.getFileCache(file);
