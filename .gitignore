@@ -19,7 +19,7 @@ test-vault/.obsidian/plugins/obsidian-svelte-plugin/*.js
 test-vault/.obsidian/plugins/obsidian-svelte-plugin/*.json
 
 main.js
-
+styles.css
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
