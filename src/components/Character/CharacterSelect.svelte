@@ -4,7 +4,7 @@
   import { TFile } from "obsidian";
   import { linkClick, linkHover } from "../../utils/internalLinks";
   import { FuzzyFileModal } from "../BaseUI/Suggests/FuzzyFileModal";
-  import { createEventDispatcher, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { FolderOpen, X } from "lucide-svelte";
 
   let p: ObsidianCharacterView;
