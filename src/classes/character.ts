@@ -26,7 +26,7 @@ export default class Character implements Entity, Personality, Senses, Proficien
 
   cr: number = 1; // Level
   baseAC: number = 8;
-  speed: number = 30;
+  speed: string[] = ["30"];
 
   stats: Stat[] = defaultDndStats();
   abilityDCs: Stat[] = [];
@@ -148,6 +148,7 @@ export default class Character implements Entity, Personality, Senses, Proficien
 
       cr: this.cr,
       ac: this.baseAC,
+      speed: this.speed.join(', '),
 
       inspiration: this.inspiration,
 
@@ -188,7 +189,7 @@ export default class Character implements Entity, Personality, Senses, Proficien
     // TODO: Class
     if(statblock.cr) this.cr = statblock.cr;
     if(statblock.ac) this.baseAC = statblock.ac;
-    // TODO: speed
+    if(statblock.speed) this.speed = statblock.speed.split(',').map(speed => speed.trim());
 
     this.inspiration = statblock.inspiration ?? 0;
 

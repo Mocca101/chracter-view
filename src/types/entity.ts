@@ -12,7 +12,7 @@ export default interface Entity extends EntityStats, EntityBase {
 interface EntityStats {
   stats: Stat[];
   cr: number;
-  speed: number;
+  speed: string[];
   hitPoints: HitPoints;
   hitDice: HitDice;
 }

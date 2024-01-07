@@ -6,6 +6,8 @@
   import ModifierField from "../BaseUI/ModifierField.svelte";
   import HitDice from "./HitDice.svelte";
   import type Character from "../../classes/character";
+  import BaseContainerRect from "../BaseUI/BaseContainerRect.svelte";
+  import ArrayTextField from "../BaseUI/ArrayTextField.svelte";
 
   export let entity: Character;
 </script>
@@ -30,6 +32,9 @@
 
     <div class="flex gap-1 text-center flex-wrap min-w-[212px] mb-2">
       <HitPointsUi bind:hitPoints={entity.hitPoints} />
+      <BaseContainerRect class="h-fit" title="Speed">
+        <ArrayTextField bind:textArray={entity.speed}/>
+      </BaseContainerRect>
       <HitDice
         bind:hitDice={entity.hitDice}
         on:hit-die-rolled={(res) =>
@@ -59,10 +64,6 @@
           class="m-0"
         />
         <p class="m-0">Initiative</p>
-      </BaseContainerRound>
-      <BaseContainerRound>
-        <TextNumberInput bind:value={entity.speed} />
-        <p class="m-0">Speed</p>
       </BaseContainerRound>
     </div>
   </div>

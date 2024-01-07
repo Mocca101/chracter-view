@@ -14,13 +14,7 @@ export const zStatblock = z.object({
   cr: z.number().default(1), // Level
   ac: z.number().optional(), // Base AC // TODO: Rework this -> Load from armor (?)
   
-  speed: 
-    z.number().optional().or(
-    z.string().optional().or(
-    z.array(z.string()).optional().or(
-    z.array(z.number()).optional().or(
-    z.record(z.string(), z.string())
-    )))),
+  speed: z.string().optional(),
 
   // Entity Stats
   stats: 
