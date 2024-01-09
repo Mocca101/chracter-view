@@ -1,62 +1,40 @@
 import { parseYaml, stringifyYaml, TFile } from "obsidian";
-import type { CodeSection, SectionedFile, TypedSection, YamlSection } from "../utils/file";
+import type { SectionedFile,  } from "../utils/file";
 import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
 import type Character from "./character";
 import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
 import { statblockFromString } from "../utils/util";
+import { firstParagraph, headingByName, type CodeSection, type Section, type YamlSection } from "../utils/fileParser";
 
 export default class CharacterFile implements SectionedFile {
   p: ObsidianCharacterView;
 
   baseFile: TFile;
-  sections: TypedSection[];
+  sections: Section[];
 
-  constructor(sectionedFile: SectionedFile) {
+  constructor(baseFile: TFile, sections: Section[]) {
     mainStore.plugin.subscribe(plugin => this.p = plugin);
-    this.baseFile = sectionedFile.baseFile;
-    this.sections = sectionedFile.sections;
+    this.baseFile = baseFile;
+    this.sections = sections;
   }
 
-  get frontmatter() : YamlSection {
+  get frontmatter() : YamlSection | null {
     if(this.sections.length < 1) return null;
-    if(this.sections[0].type !== 'yaml') return null;
-
-    return this.sections[0].yaml;
+    return this.sections.find(section => section.type === 'yaml') as YamlSection | null;;
   }
 
   get description() : string {
-    if(this.sections.length < 1) {
-      return '';
-    }
-    const descriptionHeading = this.getHeading('Description');
+    if(this.sections.length < 1) return '';
+
+    const descriptionString = 'description'
+    const descriptionHeading = headingByName(this.sections, descriptionString)
+    
     if(!descriptionHeading) return '';
-    return this.getContentBelowSection(descriptionHeading.index, descriptionHeading.section.level).trim();
+
+    return firstParagraph(descriptionHeading).text.trim() ?? '';
   }
 
-  getHeading(text: string) {
-    for(let i = 0; i < this.sections.length; i++) {
-      const section = this.sections[i];
-      if(section.type!== 'heading') continue;
-      if(section.text.toLowerCase().contains(text.toLowerCase())) return { section, index: i };
-    }
-    return null;
-  }
-
-  getContentBelowSection(sectionIndex: number, stopAtHeadingLevel?: number) : string {
-    const content = [''];
-    for(let i = sectionIndex + 1; i < this.sections.length; i++) {
-      const section = this.sections[i];
-      if(section.type!== 'heading') {
-        content.push(section.content);
-        continue;
-      }
-
-      if(stopAtHeadingLevel && section.level <= stopAtHeadingLevel) break;
-      content.push(section.content);
-    }
-    return content.join('\n');
-  }
 
   /**
    * Returns the first statblock found in the file, if it exists.
@@ -64,18 +42,12 @@ export default class CharacterFile implements SectionedFile {
   get statblock(): Statblock {
     if(!this.statblockSection) return null;
 
-    const statblockAsString = this.statblockSection.lines.slice(1, -1).join("\n");
+    const statblockAsString = this.statblockSection.text;
     return zStatblock.passthrough().parse(parseYaml(statblockAsString));
   }
 
   get statblockSection(): CodeSection {
-    for(let i = 0; i < this.sections.length; i++) {
-      const section = this.sections[i];
-      if(section.type !== 'code') continue;
-      if (section.language !== "statblock") continue;
-      return section;
-    }
-    return null;
+    return this.sections.find(section => section.type === 'code' && section.language === 'statblock') as CodeSection;
   }
 
   async writeBack(character: Character) {
@@ -85,7 +57,7 @@ export default class CharacterFile implements SectionedFile {
 
     Object.assign(returnStatblock, character.statblock);
 
-    app.vault.process(this.baseFile, (data) => {
+    this.p.app.vault.process(this.baseFile, (data) => {
       return data.replace(statblockString, '\n' + stringifyYaml(returnStatblock));
     })
 

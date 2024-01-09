@@ -12,12 +12,12 @@
   import ProficienciesUi from "./ProficienciesUI.svelte";
   import { Notice, stringifyYaml, TFile } from "obsidian";
   import CharacterSelect from "./CharacterSelect.svelte";
-  import { getSectionedFile } from "../../utils/util";
   import CharacterFile from "../../classes/characterFile";
   import Character from "../../classes/character";
   import mainStore from "../../stores/mainStore";
   import type ObsidianCharacterView from "../../main";
   import { FilePlus, SaveIcon } from "lucide-svelte";
+  import { parseFile } from "../../utils/fileParser";
 
   let p: ObsidianCharacterView;
   mainStore.plugin.subscribe((plugin) => (p = plugin));
@@ -49,15 +49,12 @@
     if (activeCharacter?.basename) {
       char.name = activeCharacter.basename;
     }
+    
+    const fileString = await p.app.vault.cachedRead(activeCharacter);
 
-    const sectionedFile = await getSectionedFile(activeCharacter);
+    const parsedFile = parseFile(fileString);
 
-    if (!sectionedFile) {
-      console.error("No sectioned file");
-      return;
-    }
-
-    sectionedCharacterFile = new CharacterFile(sectionedFile);
+    sectionedCharacterFile = new CharacterFile(activeCharacter, parsedFile);
 
     if (sectionedCharacterFile.description) {
       char.description = sectionedCharacterFile.description;
