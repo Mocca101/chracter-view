@@ -3,7 +3,7 @@ import type { BaseCheck } from "../types/check";
 import type { Stat } from "../types/stats";
 import { App } from "obsidian";
 import { HeadingSection, ParagraphSection, YamlSection, type SectionType, type SectionedFile, type TypedSection, CodeSection, ThematicBreakSection } from "./file";
-import { parseFile } from "../classes/fileParser";
+import { parseFile } from "./fileParser";
 
 let app: App;
 

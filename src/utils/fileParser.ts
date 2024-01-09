@@ -1,6 +1,6 @@
 import { parseYaml } from "obsidian";
 import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
-import type { HeadingSection } from "../utils/file";
+import type { HeadingSection } from "./file";
 
 // Parsing functionality
 // - Generic parser for yaml sections
@@ -17,11 +17,8 @@ type ParsedFile = {
     description: string;
 }
 
-export function parseFile(fileString: string) : ParsedFile {
-    console.log('start parsing in fileParser.ts');
-    
+export function parseFile(fileString: string) : ParsedFile {    
     const sections = parseSections(fileString);
-    console.log('sections', sections);
     const statblock = parseStatblock(sections);
     const description = parseDescription(sections);
     return { statblock, description };
