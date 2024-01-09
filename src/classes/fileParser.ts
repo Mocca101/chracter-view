@@ -1,5 +1,6 @@
 import { parseYaml } from "obsidian";
 import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
+import type { HeadingSection } from "../utils/file";
 
 // Parsing functionality
 // - Generic parser for yaml sections
@@ -41,107 +42,91 @@ type HeadingSection = BaseSection & {
     type: 'heading';
     level: number;
     subsections: Section[];
-    parentSection?: HeadingSection;
 }
-
 type ParagraphSection = BaseSection & { 
     type: 'paragraph';
 }
 
 type Section = CodeSection | YamlSection | HeadingSection | ParagraphSection;
 
-function parseSections(fileString: string) : Section[] {
+function readFrontmatter(fileString: string) : { yaml?: YamlSection, rest: string[] } {
     const lines = fileString.split('\n');
+    if(!lines[0].startsWith('---')) return { rest: lines };
+    const yamlLines = [lines[0]];
+    let i = 1;
+    for(; i < lines.length; i++) {
+        yamlLines.push(lines[i]);
+        if(lines[i].startsWith('---')) break;
+
+    }
+    const yaml: YamlSection = { type: 'yaml', lines: yamlLines };
+    return { yaml, rest: lines.slice(i + 1) };
+}
+
+function parseSections(fileString: string) : Section[] {
     let currentHeading: HeadingSection = { type: 'heading', lines: [], level: 0, subsections: [] };
     let currentBlock: Section = currentHeading;
     const sections: Section[] = [currentBlock];
 
-    // TODO: refactor this to be more readable
-    // TODO: add blocks & headings to parent headings
-
-    console.log(currentBlock)
+    const { yaml, rest } = readFrontmatter(fileString);
+    if(yaml) {
+        sections.push(yaml);
+        currentHeading.subsections.push(yaml);
+    }
+    const lines = rest;
 
     for(let i = 0; i < lines.length; i++) {
         const line = lines[i];
         let sectionType = parseLineForSection(line);
 
-
-        if(sectionType === 'yaml' && i > 0 && currentBlock?.type !== 'yaml') sectionType = null;
-
-        if(!sectionType) {
-            currentBlock?.lines.push(line);
-            continue;
+        // Create a paragraph section if its a non-special line (Only if it's under a heading, so e.g. not for codeblocks)
+        if(!sectionType && currentBlock.type === 'heading') {
+            currentBlock = { type: 'paragraph', lines: [] };
+            currentHeading.subsections.push(currentBlock);
+            sections.push(currentBlock);
         }
 
+        // If it's a heading create a new heading section and append it to the next higher heading
         if(sectionType === 'heading') {
             const level = line.match(/^#+/)[0].length;
+            const newHeading: HeadingSection = { type: 'heading', lines: [], level, subsections: [] }; 
+            const parentHeading: HeadingSection = sections
+                .filter(section => section.type === 'heading')
+                .findLast((section: HeadingSection) => section.level < level) as HeadingSection;
 
-            const newHeading: HeadingSection = { type: 'heading', lines: [line], level, subsections: [] };
 
-            if(level > currentHeading.level) {
-                currentHeading.subsections.push(newHeading);
-                newHeading.parentSection = currentHeading;
-                currentHeading = newHeading;
+            parentHeading?.subsections.push(newHeading);
+            currentHeading = newHeading;
+            currentBlock = newHeading;
+            sections.push(newHeading);
+        }
 
-                console.log('level < currentHeading.level', currentHeading);
-            } 
-            // else if(level === currentHeading.level) {
-            //     currentHeading.parentSection.subsections.push(newHeading);
-            //     newHeading.parentSection = currentHeading.parentSection;
-            //     currentHeading = newHeading;            
-            // } 
-            else {
-                while(level < currentHeading.level) {
-                    currentHeading = currentHeading.parentSection;
-                    console.log('level < currentHeading.level', currentHeading);
-                }
-                currentHeading.subsections.push(newHeading);
-                newHeading.parentSection = currentHeading;
-                currentHeading = newHeading;
-            }            
-
+        // if we're already in a codeblock and the line starts with ``` we're closing the codeblock
+        if(sectionType === 'code' && currentBlock.type === 'code') {
+            currentBlock.lines.push(line);
             currentBlock = currentHeading;
-            sections.push(currentBlock);
             continue;
-        }
-
-        if(sectionType === 'code') {
-            if(currentBlock.type === 'code') {
-                currentBlock.lines.push(line);
-                currentBlock = currentHeading;
-                continue;
-            } 
-            currentBlock = { type: 'code', lines: [line] };
+        } 
+        // if we're not in a codeblock and the line starts with ``` we're opening a codeblock
+        else if(sectionType === 'code') {
+            currentBlock = { type: 'code', lines: [], language: line.match(/^```(.*)/)[1] };
             currentHeading.subsections.push(currentBlock);
             sections.push(currentBlock);
-            continue;
         }
 
-        if(sectionType === 'yaml') {
-            if(currentBlock.type === 'yaml') {
-                currentBlock.lines.push(line);
-                currentBlock = currentHeading;
-                continue;
-            }
-
-            currentBlock = { type: 'yaml', lines: [line] };
-            currentHeading.subsections.push(currentBlock);
-            sections.push(currentBlock);
-            continue;
-        }
+        currentBlock.lines.push(line);
     }
     return sections;
 }
 
-function parseLineForSection(line: string) : 'yaml' | 'code' | 'heading' | null {
-    if(line.startsWith('---')) return 'yaml';
+function parseLineForSection(line: string) : 'code' | 'heading' | null {
     if(line.startsWith('```')) return 'code';
     if (/^#+\s/.test(line)) return 'heading';
     return null;
 }
 
 function parseStatblock(sections: Section[]) : Statblock {
-    const statblockSection = sections.find(section => section.type === 'code' && section.lines[0].startsWith('```statblock'));
+    const statblockSection = sections.find(section => section.type === 'code' && section.language === 'statblock');
     if(!statblockSection) return null;
 
     const statblockAsString = statblockSection.lines.slice(1, -1).join("\n");
@@ -151,10 +136,14 @@ function parseStatblock(sections: Section[]) : Statblock {
 const descriptionHeading = 'Description';
 function parseDescription(sections: Section[]) : string {
     const descriptionSection = sections.find(section => {
-        return section.type === 'heading' && section.lines[0].toLowerCase().includes(descriptionHeading.toLowerCase())
-    });
+        return section.type === 'heading' && section.level > 0 && section.lines[0].toLowerCase().includes(descriptionHeading.toLowerCase())
+    }) as HeadingSection;
     if(!descriptionSection) return null;
 
-    const description = descriptionSection.lines.slice(1).join('\n');
+    const pargraphs = descriptionSection.subsections.filter(section => section.type === 'paragraph');
+
+    if(!pargraphs || pargraphs.length === 0) return '';
+
+    const description = pargraphs[0].lines.join('\n').trim();
     return description;
 }
