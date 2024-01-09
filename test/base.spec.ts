@@ -5,7 +5,7 @@ import { BaseStats } from '../src/data/BaseStats';
 import { DnDBaseSkills } from '../src/data/BaseSkills';
 import { kuiniString } from './testUtils';
 
-const pathToVault = process.env.TO_VAULT;
+const vaultName = process.env.VAULTNAME;
 const pathToExe = process.env.TO_EXE;
 
 const kuiniStats = [
@@ -163,8 +163,8 @@ test.beforeAll(async () => {
 
   let args: string[] = [''];
 
-  if(pathToVault) {
-    args = [`${obsidianCreate}vault=${pathToVault}&name=${testNoteName}&content=${content}&overwrite`]
+  if(vaultName) {
+    args = [`${obsidianCreate}vault=${vaultName}&name=${testNoteName}&content=${content}&overwrite`]
   }
 
   electronApp = await electron.launch({
