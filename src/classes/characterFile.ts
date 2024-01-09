@@ -51,14 +51,13 @@ export default class CharacterFile implements SectionedFile {
   }
 
   async writeBack(character: Character) {
-    const fileString = await this.p.app.vault.read(this.baseFile);
-    const statblockString = statblockFromString(fileString);
+    const statblockString = this.statblockSection.text;
     const returnStatblock: Statblock = zStatblock.passthrough().parse(parseYaml(statblockString));
 
     Object.assign(returnStatblock, character.statblock);
 
     this.p.app.vault.process(this.baseFile, (data) => {
-      return data.replace(statblockString, '\n' + stringifyYaml(returnStatblock));
+      return data.replace(statblockString, stringifyYaml(returnStatblock));
     })
 
   }
