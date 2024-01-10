@@ -72,7 +72,7 @@
 
   const onIndexed = p.registerEvent(
     p.app.metadataCache.on("changed", (file: TFile) => {
-      if (file.path === activeCharacter.path) {
+      if (file.path === activeCharacter?.path) {
         updateFromCharacter();
       }
     })
