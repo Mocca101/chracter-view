@@ -82,11 +82,11 @@
     let newPath = char.name + ".md";
     let content = "";
 
-    const templateFile = app.vault.getAbstractFileByPath(
+    const templateFile = p.app.vault.getAbstractFileByPath(
       p.settings.characterTemplatePath
     );
     if (templateFile && templateFile instanceof TFile) {
-      content = await app.vault.read(templateFile);
+      content = await p.app.vault.read(templateFile);
     }
 
     content = content.replace(
@@ -94,7 +94,7 @@
       "\n```statblock\n" + stringifyYaml(char.statblock) + "```\n"
     );
 
-    if (await app.vault.adapter.exists(newPath)) {
+    if (await p.app.vault.adapter.exists(newPath)) {
       new Notice(
         "File '" +
           newPath +

@@ -37,7 +37,7 @@ export default class ObsidianCharacterView extends Plugin {
 		await this.loadSettings();
 
 		// @ts-ignore "plugin" doesn't exist
-		this.diceRollerPlugin = app.plugins.getPlugin("obsidian-dice-roller");
+		this.diceRollerPlugin = this.app.plugins.getPlugin("obsidian-dice-roller");
 
 		mainStore.plugin.set(this);
 		this.registerView(VIEW_TYPE_CHARACTER, (leaf) => new CharacterView(leaf));

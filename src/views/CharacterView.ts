@@ -6,7 +6,7 @@ import type ObsidianCharacterView from "../main";
 export const VIEW_TYPE_CHARACTER = "character-view";
 
 export class CharacterView extends ItemView {
-	plugin: ObsidianCharacterView;
+	p: ObsidianCharacterView;
 
 	component: CharacterMainSvelte;
 
@@ -35,8 +35,8 @@ export class CharacterView extends ItemView {
 	}
 
   	async onOpen() {
-		mainStore.plugin.subscribe((p) => (this.plugin = p));
-		this.plugin.diceRollerPlugin = app.plugins.getPlugin("obsidian-dice-roller");
+		mainStore.plugin.subscribe((plugin) => (this.p = plugin));
+		this.p.diceRollerPlugin = this.p.app.plugins.getPlugin("obsidian-dice-roller");
 		this.component = new CharacterMainSvelte({
 			target: this.contentEl,
 		});

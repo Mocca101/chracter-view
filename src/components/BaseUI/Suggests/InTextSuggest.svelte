@@ -1,6 +1,11 @@
 <script lang="ts">
   import { SuggestionDropdown } from "./SuggestDropdown";
   import { onMount } from "svelte";
+  import ObsidianCharacterView from "../../../main";
+  import mainStore from "../../../stores/mainStore";
+
+  let p: ObsidianCharacterView;
+  mainStore.plugin.subscribe((plugin) => (p = plugin));
 
   let suggestContainer: HTMLTextAreaElement;
   let suggestFieldContent: string = "";
@@ -34,7 +39,7 @@
   onMount(() => {
     suggestDropdown = new SuggestionDropdown(
       suggestContainer,
-      () => app.vault.getMarkdownFiles().map((file) => file.basename),
+      () => p.app.vault.getMarkdownFiles().map((file) => file.basename),
       (submission) => {
         suggestFieldContent = insert(
           suggestFieldContent,

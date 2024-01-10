@@ -1,5 +1,9 @@
 import { Notice, type TFile } from "obsidian";
+import mainStore from "../stores/mainStore";
+import type ObsidianCharacterView from "../main";
 
+let p: ObsidianCharacterView;
+mainStore.plugin.subscribe((plugin) => (p = plugin));
 /***
  * Example: 
  *   on:mouseenter={(e) => {
@@ -7,7 +11,7 @@ import { Notice, type TFile } from "obsidian";
     }}
  */
 export function linkHover(source: EventTarget, target: EventTarget, displayName: string, file?: TFile) {
-    app.workspace.trigger(
+    p.app.workspace.trigger(
       "link-hover", // Event
       source, // Source
       target, // Target
@@ -22,6 +26,6 @@ export async function linkClick(name: string, file?: TFile) {
         return;
     }
 
-    const leaf = app.workspace.getLeaf(true);
+    const leaf = p.app.workspace.getLeaf(true);
     await leaf.openFile(file, { active : true });
 }

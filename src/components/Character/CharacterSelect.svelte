@@ -16,7 +16,7 @@
   const characterSelectModal = new FuzzyFileModal(app);
   characterSelectModal.getItems = () =>
     p.app.vault.getMarkdownFiles().filter((file) => {
-      const fileCache = app.metadataCache.getFileCache(file);
+      const fileCache = p.app.metadataCache.getFileCache(file);
 
       if (
         fileCache.frontmatter?.tags
