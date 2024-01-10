@@ -7,12 +7,14 @@ import { initUtils } from "./utils/util";
 interface ObsidianCharacterViewSettings {
 	characterTag: string;
 	characterTemplatePath: string; // full path from vault root, including the .md extension
+	descriptionHeding: string;
 	debugMode: boolean;
 }
 
 const DEFAULT_SETTINGS: ObsidianCharacterViewSettings = {
 	characterTag: "#dnd-character",
 	characterTemplatePath: "templates/char_template.md",
+	descriptionHeding: "description",
 	debugMode: false
 };
 

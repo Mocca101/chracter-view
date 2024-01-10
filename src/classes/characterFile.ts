@@ -4,7 +4,6 @@ import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
 import type Character from "./character";
 import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
-import { statblockFromString } from "../utils/util";
 import { firstParagraph, headingByName, type CodeSection, type Section, type YamlSection } from "../utils/fileParser";
 
 export default class CharacterFile implements SectionedFile {
@@ -27,10 +26,13 @@ export default class CharacterFile implements SectionedFile {
   get description() : string {
     if(this.sections.length < 1) return '';
 
-    const descriptionString = 'description'
-    const descriptionHeading = headingByName(this.sections, descriptionString)
+    const descriptionHeading = headingByName(this.sections, this.p.settings.descriptionHeding);
     
     if(!descriptionHeading) return '';
+
+    const descriptionParagraph = firstParagraph(descriptionHeading);
+
+    if(!descriptionParagraph || !descriptionHeading.text) return '';
 
     return firstParagraph(descriptionHeading).text.trim() ?? '';
   }
@@ -57,7 +59,32 @@ export default class CharacterFile implements SectionedFile {
     Object.assign(returnStatblock, character.statblock);
 
     this.p.app.vault.process(this.baseFile, (data) => {
-      return data.replace(statblockString, stringifyYaml(returnStatblock));
+      let newData = data;
+      
+      // Replace the statblock with the new one
+      newData = newData.replace(statblockString, stringifyYaml(returnStatblock));
+
+      // Replace the description with the new one
+
+      // split file into pre description heading and post description heading
+      const descriptionHeading = headingByName(this.sections, this.p.settings.descriptionHeding)
+
+      if(!descriptionHeading) return newData;
+
+      const parts = newData.split(descriptionHeading.text);
+      const preDescription = parts[0];
+      let postDescription = parts[1];
+
+      // replace the description in the post description part
+      const descriptionParagraph = firstParagraph(descriptionHeading);
+
+      if(!descriptionParagraph) postDescription = '\n' + character.description + postDescription;
+      else postDescription = postDescription.replace(descriptionParagraph.text.trim(), character.description);
+      
+      // rejoin the parts
+      newData = preDescription + descriptionHeading.text + postDescription;
+
+      return newData
     })
 
   }

@@ -1,15 +1,9 @@
 import { parseYaml } from "obsidian";
 import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
 
-type ParsedFile = {
-    statblock: Statblock;
-    description: string;
-}
 
 export function parseFile(fileString: string) : Section[] {    
     const sections = parseSections(fileString);
-    const statblock = getStatblock(sections);
-    const description = getDescriptionFromSections(sections);
     return sections;
 }
 
@@ -123,7 +117,7 @@ export function headingByName(sections: Section[], name: string) : HeadingSectio
         section.type === 'heading'  
         // Bellow is needed as the first heading is the root and has no text in it's line
         && section.level > 0
-        && section.text[0].toLowerCase().includes(name.toLowerCase())
+        && section?.text?.toLowerCase().includes(name.toLowerCase())
     ) as HeadingSection;
 }
 
