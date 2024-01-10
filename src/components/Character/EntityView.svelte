@@ -23,9 +23,10 @@
         {entity.name}
       </h1>
       <p>Level: <TextNumberInput bind:value={entity.cr} /></p>
-      <textarea        
-        bind:value={entity.description}
-        class="border-none resize-none hover:resize hover:border-solid focus:resize focus:border-solid"
+      <p
+        contenteditable
+        class="p-1 rounded hover:cursor-text focus:outline focus:outline-1"
+        bind:innerText={entity.description}
       />
     </div>
 
