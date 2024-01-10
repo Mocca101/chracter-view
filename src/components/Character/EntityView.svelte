@@ -25,7 +25,7 @@
       <p>Level: <TextNumberInput bind:value={entity.cr} /></p>
       <p
         contenteditable
-        class="hover:cursor-text"
+        class="p-1 rounded hover:cursor-text focus:outline focus:outline-1"
         bind:innerText={entity.description}
       />
     </div>

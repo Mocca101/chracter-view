@@ -90,7 +90,7 @@ function writeUnderHeading(heading: HeadingSection | undefined, fileString: stri
   const descriptionParagraph = firstParagraph(heading);
 
   if(!descriptionParagraph) postDescription = '\n' + newText + postDescription;
-  else postDescription = postDescription.replace(descriptionParagraph.text.trim(), newText);
+  else postDescription = postDescription.replace(descriptionParagraph.text.trim(), newText.trim());
   
   return preDescription + heading.text + postDescription;
 }
