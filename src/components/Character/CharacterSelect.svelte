@@ -18,16 +18,14 @@
     p.app.vault.getMarkdownFiles().filter((file) => {
       const fileCache = p.app.metadataCache.getFileCache(file);
 
-      if (
-        fileCache.frontmatter?.tags
-          ?.map((t) => t.replace("#", ""))
-          .includes(charTag())
-      )
-        return true;
+      const tags = []
 
-      return fileCache.tags
-        ?.map((tagC) => tagC.tag.replace("#", ""))
-        .contains(charTag());
+      if (fileCache.frontmatter?.tags)
+        Array.isArray(fileCache.frontmatter.tags) ? tags.push(...fileCache.frontmatter.tags) : tags.push(fileCache.frontmatter.tags)
+
+      if (fileCache.tags?.length > 0) tags.push(...fileCache.tags.map((tagC) => tagC.tag))
+
+      return tags.map(t => t.replace("#", "")).includes(charTag());
     });
 
   onMount(() => {
