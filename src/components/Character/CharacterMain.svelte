@@ -61,6 +61,9 @@
     }
 
     assignFromStatblock(sectionedCharacterFile);
+
+    char.generalPersonality = sectionedCharacterFile.generalPersonality;
+    char.personalityTraits = sectionedCharacterFile.personalityTraits;
   }
 
   function assignFromStatblock(charcterfile: CharacterFile) {

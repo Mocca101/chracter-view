@@ -5,6 +5,13 @@ import type Character from "./character";
 import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
 import { firstParagraph, headingByName, type CodeSection, type Section, type YamlSection, type HeadingSection } from "../utils/fileParser";
+import type { personalityTrait } from "../types/personality";
+
+
+const personalityHeadingOptions = {
+  title: 'Personality',
+  level: 2,
+}
 
 export default class CharacterFile implements SectionedFile {
   p: ObsidianCharacterView;
@@ -27,7 +34,7 @@ export default class CharacterFile implements SectionedFile {
     if(this.sections.length < 1) return '';
 
     const descriptionHeading = headingByName(this.sections, this.p.settings.descriptionHeading);
-    
+
     if(!descriptionHeading) return '';
 
     const descriptionParagraph = firstParagraph(descriptionHeading);
@@ -37,6 +44,37 @@ export default class CharacterFile implements SectionedFile {
     return firstParagraph(descriptionHeading).text.trim() ?? '';
   }
 
+  get personalityTraits() {
+    const personalityHeading = headingByName(this.sections, personalityHeadingOptions.title);
+
+    if(!personalityHeading) return [];
+
+    const personalityTraits = personalityHeading.subsections.filter(section => section.type === 'heading' && section.level === personalityHeadingOptions.level + 1) as HeadingSection[];
+
+    return personalityTraits.map(trait => {
+      const traitParagraph = firstParagraph(trait);
+
+      if(!traitParagraph) return null;
+
+      return {
+        name: trait.text.slice(trait.level + 1).trim(),
+        text: traitParagraph.text.trim(),
+      }
+    }).filter(trait => trait !== null) as personalityTrait[];
+  }
+
+  get generalPersonality() : string {
+    const personalityHeading = headingByName(this.sections, personalityHeadingOptions.title);
+
+    if(!personalityHeading) return '';
+
+
+    const personalityParagraph =  firstParagraph(personalityHeading);
+
+    if(!personalityParagraph) return '';
+
+    return personalityParagraph.text.trim();
+  }
 
   /**
    * Returns the first statblock found in the file, if it exists.
@@ -60,7 +98,7 @@ export default class CharacterFile implements SectionedFile {
 
     this.p.app.vault.process(this.baseFile, (data) => {
       let fileString = data;
-      
+
       // Replace the statblock with the new one
       fileString = fileString.replace(statblockString, stringifyYaml(returnStatblock));
 
@@ -71,6 +109,27 @@ export default class CharacterFile implements SectionedFile {
         fileString,
         character.description);
 
+      const personalityHeading = headingByName(this.sections, personalityHeadingOptions.title);
+
+      if(!personalityHeading) {
+        fileString += `\n\n${'#'.repeat(personalityHeadingOptions.level)} ${personalityHeadingOptions.title}\n\n`;
+      } else {
+        fileString = writeUnderHeading(personalityHeading, fileString, character.generalPersonality);
+      }
+
+      character.personalityTraits.forEach(trait => {
+        console.log(trait);
+
+        const traitHeading = headingByName(this.sections, trait.name);
+
+        if(!traitHeading) {
+          fileString += `\n\n${'#'.repeat(personalityHeadingOptions.level + 1)} ${trait.name}\n\n ${trait.text}`;
+        }
+        else {
+          fileString = writeUnderHeading(traitHeading, fileString, trait.text);
+        }
+      });
+
       return fileString
     })
 
@@ -78,19 +137,19 @@ export default class CharacterFile implements SectionedFile {
 
 }
 
-function writeUnderHeading(heading: HeadingSection | undefined, fileString: string, newText: string) : string { 
-  if(!heading) return fileString;  
+function writeUnderHeading(heading: HeadingSection | undefined, text: string, textToInsert: string) : string {
+  if(!heading) return text;
 
   // Split file into pre & post heading.
   // This is to only replace the text after the heading and not match any previous occurences.
-  const parts = fileString.split(heading.text);
+  const parts = text.split(heading.text);
   const preDescription = parts[0];
   let postDescription = parts[1];
 
   const descriptionParagraph = firstParagraph(heading);
 
-  if(!descriptionParagraph) postDescription = '\n' + newText + postDescription;
-  else postDescription = postDescription.replace(descriptionParagraph.text.trim(), newText.trim());
-  
-  return preDescription + heading.text + postDescription;
+  if(!descriptionParagraph) postDescription = textToInsert + postDescription;
+  else postDescription = postDescription.replace(descriptionParagraph.text.trim(), textToInsert.trim());
+
+  return preDescription + heading.text + '\n' + postDescription;
 }

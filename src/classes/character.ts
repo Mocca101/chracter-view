@@ -9,7 +9,7 @@ import { DnDBaseSkills } from "../data/BaseSkills";
 import type { HitDice } from "../types/diceCombo";
 import { getAC } from "../utils/armorHelper";
 import { type Armor, type ArmorType } from "../types/armorTypes";
-import type { Personality } from "../types/personality";
+import type { Personality, personalityTrait } from "../types/personality";
 import type { Sense, Senses } from "../types/senses";
 import type { Proficiencies } from "../types/proficiency";
 import type { Statblock } from "../types/zod/zodSchemas";
@@ -67,10 +67,25 @@ export default class Character implements Entity, Personality, Senses, Proficien
 
   // --- Personality ---
 
-  traits: string[] = [""];
-  ideals: string[] = [""];
-  bonds: string[] = [""];
-  flaws: string[] = [""];
+  generalPersonality: string = "";
+  personalityTraits: personalityTrait[] = [
+    {
+      name: "Traits",
+      text: "",
+    },
+    {
+      name: "Ideals",
+      text: "",
+    },
+    {
+      name: "Bonds",
+      text: "",
+    },
+    {
+      name: "Flaws",
+      text: "",
+    },
+  ]
 
   // --- End of Personality ---
 
@@ -201,7 +216,7 @@ export default class Character implements Entity, Personality, Senses, Proficien
     this.statsFromStatblock(statblock);
     this.skillProficiencyFromStatblock(statblock);
 
-    
+
     if (statblock.languages) {
       this.languages = statblock.languages
         .split(",")
@@ -222,13 +237,13 @@ export default class Character implements Entity, Personality, Senses, Proficien
       const val = value.trim();
       if(val.length > 1) filtered.push(val);
       return filtered;
-    }, []) 
+    }, [])
     ?? [];
     this.toolProficiencies = statblock.toolProficiencies?.split(",")?.reduce((filtered: string[], value) => {
       const val = value.trim();
       if(val.length > 1) filtered.push(val);
       return filtered;
-    }, []) 
+    }, [])
     ?? [];
 
     if (statblock.senses) {
@@ -242,7 +257,7 @@ export default class Character implements Entity, Personality, Senses, Proficien
         .map((ability) => this.stats.find((stat) => stat.name === ability))
         .filter((stat) => stat !== undefined) as Stat[];
     }
-    
+
     if (statblock.resistances) {
       this.resistances = statblock.resistances
         .split(",")
@@ -263,10 +278,10 @@ export default class Character implements Entity, Personality, Senses, Proficien
         dice: diceStringToDiceCombo(statblock.hit_dice),
         used: 0,
       };
-    } 
+    }
   }
 
-  private statsFromStatblock(statblock: Statblock) {    
+  private statsFromStatblock(statblock: Statblock) {
     if (statblock.stats) {
       const stats = statblock.stats;
 
