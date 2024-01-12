@@ -80,13 +80,12 @@
 
   async function saveToNewFile() {
     let newPath = char.name + ".md";
-    let content = `
-      ${char.name} ${p.settings.characterTag}\n\n
-      ### Description
-      {{description}}}
-
-      ### Stats
-      {{stats}}`
+    let content =
+      `${char.name} ${p.settings.characterTag}\n\n` +
+      "### Description\n\n" +
+      "{{description}}}\n\n" +
+      "### Stats \n\n" +
+      "{{stats}}";
 
     const templateFile = p.app.vault.getAbstractFileByPath(
       p.settings.characterTemplatePath
