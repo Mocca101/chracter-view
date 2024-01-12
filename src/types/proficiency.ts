@@ -4,6 +4,14 @@ import type {BaseCheck } from "./check";
 import type { ProficiencyState } from "./enums";
 import type { WeaponCategory } from "./weaponTypes";
 
+// IDEA:
+// SkillProficiency {
+//   skill: string;
+//   baseStatName: string;
+//   proficiencyState: ProficiencyState;
+//   dice?: DiceCombo;
+// }
+
 export type SkillProficiency = {
   check: BaseCheck;
   proficiencyState: ProficiencyState;
