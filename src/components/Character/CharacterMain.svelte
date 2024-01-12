@@ -49,7 +49,7 @@
     if (activeCharacter?.basename) {
       char.name = activeCharacter.basename;
     }
-    
+
     const fileString = await p.app.vault.cachedRead(activeCharacter);
 
     const parsedFile = parseFile(fileString);
@@ -80,19 +80,32 @@
 
   async function saveToNewFile() {
     let newPath = char.name + ".md";
-    let content = "";
+    let content = `
+      ${char.name} ${p.settings.characterTag}\n\n
+      ### Description
+      {{description}}}
+
+      ### Stats
+      {{stats}}`
 
     const templateFile = p.app.vault.getAbstractFileByPath(
       p.settings.characterTemplatePath
     );
     if (templateFile && templateFile instanceof TFile) {
       content = await p.app.vault.read(templateFile);
+    } else {
+      new Notice(
+        "Could not find template file. If you want to customize what the created file looks like set it in the plugins settings."
+        )
     }
+
 
     content = content.replace(
       "{{stats}}",
       "\n```statblock\n" + stringifyYaml(char.statblock) + "```\n"
     );
+
+    content = content.replace("{{description}}", char.description);
 
     if (await p.app.vault.adapter.exists(newPath)) {
       new Notice(
