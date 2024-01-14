@@ -167,7 +167,7 @@
     </span>
   </div>
 
-  {#if heading}
+  {#if heading && heading.text}
     <HeadingTextblock heading={heading} />    
   {/if}
 
