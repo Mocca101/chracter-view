@@ -119,10 +119,10 @@ export default class Character implements Entity, Personality, Senses, Proficien
 
   // --- End of Proficiencies ---
 
-  constructor(name?: string, description?: string, stats?: Stat[], speed?: number, hitPoints?: HitPoints) {
+  constructor(name?: string, description?: string, stats?: Stat[], speed?: string[], hitPoints?: HitPoints) {
     if(name) this.name = name;
     if(description) this.description = description;
-    if(speed)this.speed = speed ?? 30;
+    if(speed)this.speed = speed ?? ["30"];
     if(hitPoints) this.hitPoints = hitPoints ;
 
     this.stats = stats ??  defaultDndStats();
