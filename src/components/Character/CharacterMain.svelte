@@ -18,6 +18,8 @@
   import type ObsidianCharacterView from "../../main";
   import { FilePlus, SaveIcon } from "lucide-svelte";
   import { parseFile } from "../../utils/fileParser";
+  import HeadingTextblock from "../BaseUI/HeadingTextblock.svelte";
+  import type { HeadingSection } from "../../utils/fileParser"
 
   let p: ObsidianCharacterView;
   mainStore.plugin.subscribe((plugin) => (p = plugin));
@@ -125,6 +127,13 @@
     if (!sectionedCharacterFile) return;
     sectionedCharacterFile.writeBack(char);
   }
+
+  let heading = null;
+
+  $: if(sectionedCharacterFile) {
+    heading = sectionedCharacterFile.sections.filter(s => s.type === 'heading' && s.level > 0)[0] as HeadingSection;  
+  }
+
 </script>
 
 <div class="w-6/12 mx-auto">
@@ -155,6 +164,11 @@
       </button>
     </span>
   </div>
+
+  {#if heading}
+    <HeadingTextblock heading={heading} />
+    
+  {/if}
 
   <EntityView bind:entity={char} />
 
