@@ -132,6 +132,8 @@
 
   $: if(sectionedCharacterFile) {
     heading = sectionedCharacterFile.sections.filter(s => s.type === 'heading' && s.level > 0)[0] as HeadingSection;  
+  } else {
+    heading = null;
   }
 
 </script>
@@ -166,8 +168,7 @@
   </div>
 
   {#if heading}
-    <HeadingTextblock heading={heading} />
-    
+    <HeadingTextblock heading={heading} />    
   {/if}
 
   <EntityView bind:entity={char} />
