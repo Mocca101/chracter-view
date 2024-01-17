@@ -8,14 +8,12 @@
     export let heading: HeadingSection | undefined | null = undefined;    
 
     export let collapsibleOpen = false;
+    export let defaultOpen = true;
 
-    let paragraph: string = 'No Paragraphs';
-    let subheadings: HeadingSection[] = [];
 
     onMount(() => {
         if(!heading) return;
-        paragraph = firstParagraph(heading)?.text.trim() ?? 'No Paragraphs';
-        subheadings = heading.subsections.filter(s => s.type === 'heading') as HeadingSection[];
+        collapsibleOpen = defaultOpen;
     })
 
 
@@ -74,9 +72,8 @@
                                 </div>
                             </div>
                         {/if}
-                        <!-- <div contenteditable bind:innerText={section.text} class="m-2"/> -->
                     {:else if section.type === 'heading'}
-                        <svelte:self class="my-2" bind:heading={section} />                        
+                        <svelte:self class="my-2" bind:heading={section} defaultOpen={false} />                        
                     {/if}
                 {/each}
 
