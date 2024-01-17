@@ -6,7 +6,6 @@ import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
 import { firstParagraph, headingByName, type CodeSection, type Section, type YamlSection, type HeadingSection, allText } from "../utils/fileParser";
 import type { personalityTrait } from "../types/personality";
-import { text } from "stream/consumers";
 
 
 const personalityHeadingOptions = {
@@ -173,11 +172,7 @@ export default class CharacterFile implements SectionedFile {
 function writeHeadingSectionBack(heading: HeadingSection,
   originalText: string) :string {
 
-  console.log(heading)
-
-  // Split string in pre & post heading
   let [preHeading, postHeading] = originalText.split(heading.text);
-
 
   preHeading += heading.text;
 
@@ -186,6 +181,7 @@ function writeHeadingSectionBack(heading: HeadingSection,
     const subsection = heading.subsections[i];
 
     if(subsection.new) {
+
       subsection.new = false;
       // at the top: add subsection text + newline
       // in the middle: find previous, and insert with newline + subsection text + newline
@@ -216,8 +212,10 @@ function writeHeadingSectionBack(heading: HeadingSection,
     }
 
     if(subsection.type !== 'heading') {
-      if(!subsection.editedText){ console.log('Section not edited'); continue; };
+      if(!subsection.editedText){ console.log('Section not edited', subsection); continue; };
+
       postHeading = postHeading.replace(subsection.text, subsection.editedText);
+
       continue;
     }
 

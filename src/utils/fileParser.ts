@@ -47,6 +47,7 @@ function readFrontmatter(fileString: string) : { yaml?: YamlSection, rest: strin
 function parseSections(fileString: string) : Section[] {
     let currentHeading: HeadingSection = { type: 'heading', text: '', level: 0, subsections: [] };
     let currentBlock: Section = currentHeading;
+    let currentText: string[] = [];
     const sections: Section[] = [currentBlock];
 
     const { yaml, rest } = readFrontmatter(fileString);
@@ -59,6 +60,11 @@ function parseSections(fileString: string) : Section[] {
     for(let i = 0; i < lines.length; i++) {
         const line = lines[i];
         let sectionType = parseLineForSection(line);
+
+        if(sectionType) {
+            currentBlock.text = currentText.join('\n');
+            currentText = [];
+        }
 
         // Create a paragraph section if its a non-special line (Only if it's under a heading, so e.g. not for codeblocks)
         if(!sectionType && currentBlock.type === 'heading') {
@@ -95,8 +101,13 @@ function parseSections(fileString: string) : Section[] {
             continue;
         }
 
-        currentBlock.text += line + '\n';
+        currentText.push(line);
     }
+
+    if(currentText.length > 0) {
+        currentBlock.text = currentText.join('\n');
+    }
+
     return sections;
 }
 
@@ -129,13 +140,14 @@ export function firstParagraph(heading: HeadingSection) : ParagraphSection | nul
 
 export function allText(sections: Section[]) : string {
     let text = '';
-    for(const section of sections) {
+
+    for(let i = 0; i < sections.length; i++) {
+        const section = sections[i];
+        if(i === 0) text += section.text;
+        else text += '\n' + section.text;
         if(section.type === 'heading') {
-            text += section.text + '\n';
-            text += allText(section.subsections);
-            continue;
+            text += '\n' + allText(section.subsections);
         }
-        text += section.text + '\n';
     }
     return text;
 }
