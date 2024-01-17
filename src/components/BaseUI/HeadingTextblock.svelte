@@ -1,6 +1,7 @@
 <script lang="ts">
+    import ParagraphEditor from './Sections/ParagraphEditor.svelte';
     import { Collapsible } from "bits-ui";
-    import { firstParagraph, type HeadingSection } from "../../utils/fileParser";
+    import { type HeadingSection } from "../../utils/fileParser";
     import { ChevronDownIcon, ChevronUpIcon, Pen } from 'lucide-svelte'
     import BaseContainerRect from "./BaseContainerRect.svelte";
     import { onMount } from "svelte";
@@ -61,19 +62,7 @@
             <Collapsible.Content>
                 {#each heading.subsections as section}
                     {#if section.type === 'paragraph'}
-                        {#if section.editedText}
-                            <div contenteditable bind:innerText={section.editedText} class="m-2"/>
-                        {:else}
-                            <div class="m-2">
-                                <span class="whitespace-pre-line ">{section.text}</span>
-                                <div class="p-0 m-0 text-center">
-                                    <button class="p-2 text-center" on:click={() => section.editedText = section.text}>
-                                        <Pen size="12"/>
-                                        <span class="sr-only">Edit</span>
-                                    </button>
-                                </div>
-                            </div>
-                        {/if}
+                        <ParagraphEditor  paragraph={section} />
                     {:else if section.type === 'heading'}
                         <svelte:self class="my-2" bind:heading={section} defaultOpen={false} />
                     {/if}
