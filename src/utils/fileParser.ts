@@ -9,6 +9,7 @@ export function parseFile(fileString: string) : Section[] {
 
 type BaseSection = {
     text: string;
+    editedText?: string;
 }
 
 export type CodeSection = BaseSection & {

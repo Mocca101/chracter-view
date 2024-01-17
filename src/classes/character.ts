@@ -97,10 +97,7 @@ export default class Character implements Entity, Personality, Senses, Proficien
 
   // Plain text 
 
-  headings: {
-    original: HeadingSection,
-    edited: HeadingSection
-  }[] = [];
+  headings: HeadingSection[] = [];
 
   private assignSenses() {
     this.keySenses = [

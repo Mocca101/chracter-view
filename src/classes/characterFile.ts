@@ -172,42 +172,43 @@ export default class CharacterFile implements SectionedFile {
  *   },
  *  }
  */
-function writeHeadingSectionBack(heading: {
-    original: HeadingSection
-    edited: HeadingSection 
-  }, 
+function writeHeadingSectionBack(heading: HeadingSection, 
   originalText: string) :string {
 
-  // Split string in pre & post heading
-  let [preHeading, postHeading] = originalText.split(heading.original.text);
+  console.log(heading)
 
-  preHeading += heading.original.text;
+  // Split string in pre & post heading
+  let [preHeading, postHeading] = originalText.split(heading.text);
+
+  preHeading += heading.text;
 
   
-  for(let i = 0; i < heading.edited.subsections.length; i++) {
+  for(let i = 0; i < heading.subsections.length; i++) {
 
-    if(i > heading.original.subsections.length){ console.log('extra Sections'); break; }
+    const subsection = heading.subsections[i];    
 
-    const editedSubsection = heading.edited.subsections[i];
+    if(subsection.type !== 'heading') {
+      console.log('non-heading subsection', subsection);
 
-    if(editedSubsection.type !== 'heading') {
-      const originalSubsection = heading.original.subsections[i];
+      if(!subsection.editedText){ console.log('Section not edited'); continue; };
+      
+      console.log('replacing:\n', subsection.text.trim(), '\nwith: \n', subsection.editedText.trim());
 
-      if(!originalSubsection) { console.log('subsecition not present in original'); break; }
+      postHeading = postHeading.replace(subsection.text.trim(), subsection.editedText.trim());
 
-      postHeading = postHeading.replace(originalSubsection.text.trim(), editedSubsection.text.trim() + 'edited');
+      //console.log('post heading', postHeading);
+      
       continue;
     }
 
-    const editedHeading = editedSubsection as HeadingSection;
-    console.log(editedHeading.text);
-    const originalHeading = headingByName(heading.original.subsections, editedHeading.text);
+    const subHeading = subsection as HeadingSection;
+    console.log(subHeading.text);
 
-    if(!originalHeading) { console.log('heading not present in original'); break; }
-
-    postHeading = writeHeadingSectionBack({ original: originalHeading, edited: editedHeading }, postHeading);
+    postHeading = writeHeadingSectionBack(subHeading, postHeading);
 
   }
+
+  console.log('pre heading', preHeading);
 
   const newText = preHeading + postHeading;
 

@@ -64,7 +64,7 @@
 
     assignFromStatblock(sectionedCharacterFile);
 
-    char.headings = [...char.headings, {original: sectionedCharacterFile.personality, edited: sectionedCharacterFile.personality}]
+    char.headings = [...char.headings, sectionedCharacterFile.personality]
 
     char.generalPersonality = sectionedCharacterFile.generalPersonality;
     char.personalityTraits = sectionedCharacterFile.personalityTraits;
@@ -163,7 +163,8 @@
 
   {#if char.headings && char.headings.length > 0}
     {#each char.headings as heading, i}
-      <HeadingTextblock bind:heading={heading.edited} />
+      <HeadingTextblock bind:heading={heading} />
+      <button on:click={() => console.log(heading)}>Print Heading</button>
     {/each} 
   {/if}
 
