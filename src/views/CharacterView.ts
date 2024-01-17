@@ -3,6 +3,7 @@ import CharacterMainSvelte from "../components/Character/CharacterMain.svelte";
 import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
 
+
 export const VIEW_TYPE_CHARACTER = "character-view";
 
 export class CharacterView extends ItemView {
@@ -18,8 +19,8 @@ export class CharacterView extends ItemView {
 		super(leaf);
 
 		this.onFileModified = this.onFileModified.bind(this);
-		
-    	this.registerEvent(this.app.vault.on("modify", this.onFileModified));
+
+		this.registerEvent(this.app.vault.on("modify", this.onFileModified));
 	}
 
 	getViewType() {
@@ -34,30 +35,29 @@ export class CharacterView extends ItemView {
 		return "venetian-mask"
 	}
 
-  	async onOpen() {
+	async onOpen() {
 		mainStore.plugin.subscribe((plugin) => (this.p = plugin));
 		this.p.diceRollerPlugin = this.p.app.plugins.getPlugin("obsidian-dice-roller");
 		this.component = new CharacterMainSvelte({
 			target: this.contentEl,
 		});
-
 	}
 
 	async onClose() {
 		this.component.$destroy();
 	}
 
-	debouncedUpdateFromCharacter = debounce((file: TFile) => this.component.fileUpdated(file), 2000, true);
+	debouncedUpdateFromCharacter = debounce((file: TFile) => this.component.fileUpdated(file), 2500);
 
 	private async onFileModified(file: TFile): Promise<void> {
-		console.log("File modified", file.path);
+		// Get the index of the prop in the context via $$.props.[propName]
+		// Get the actual value from the context via $$.ctx.[propIndex]
 
-		// TODO: Limit how often the view updates on file change, to avoid lag
-		// Get activeCharacter from component
+		const activeCharacter = this.component.$$.ctx[this.component.$$.props.activeCharacter]
 
-		if (file === this.component.$$.props.activeCharacter) {
+		if (file.path === activeCharacter.path) {
 			this.debouncedUpdateFromCharacter(file);
 		}
-			
-  	}
+
+	}
 }

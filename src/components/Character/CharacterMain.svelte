@@ -25,7 +25,7 @@
 
   let char = new Character();
 
-  let activeCharacter: TFile = null;
+  export let activeCharacter: TFile = null;
 
   let sectionedCharacterFile: CharacterFile = null;
 
@@ -76,17 +76,6 @@
     char.statblock = statblock;
   }
 
-  const debouncedUpdateFromCharacter = debounce(updateFromCharacter, 2000, true);
-
-  const onIndexed = p.registerEvent(
-    p.app.metadataCache.on("changed", (file: TFile) => {
-      if (file.path === activeCharacter?.path) {
-        console.log("File changed")
-        debouncedUpdateFromCharacter();
-      }
-    })
-  );
-
   async function saveToNewFile() {
     let newPath = char.name + ".md";
     let content =
@@ -131,7 +120,7 @@
     if (!sectionedCharacterFile) return;
     sectionedCharacterFile.writeBack(char);
   }
- 
+
 </script>
 
 <div class="w-6/12 mx-auto">
@@ -167,7 +156,7 @@
     {#each char.headings as heading, i}
       <HeadingTextblock bind:heading={heading} />
       <button on:click={() => console.log(heading)}>Print Heading</button>
-    {/each} 
+    {/each}
   {/if}
 
   <EntityView bind:entity={char} />
