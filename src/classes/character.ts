@@ -15,8 +15,10 @@ import type { Proficiencies } from "../types/proficiency";
 import type { Statblock } from "../types/zod/zodSchemas";
 import { abilityToStatblock, diceComboToString, diceStringToDiceCombo, sbProficenciesToProficiencies, statToStatblockStat } from "../utils/conversions";
 import { defaultDndStats } from "../data/baseStats";
+import type { HeadingSection } from "../utils/fileParser";
 
 export default class Character implements Entity, Personality, Senses, Proficiencies {
+
 
   name: string = "Default Name";
   description: string = "Default Description";
@@ -91,6 +93,14 @@ export default class Character implements Entity, Personality, Senses, Proficien
 
   keySenses: Sense[] = [];
   additionalSenses: string[] = [""];
+
+
+  // Plain text 
+
+  headings: {
+    original: HeadingSection,
+    edited: HeadingSection
+  }[] = [];
 
   private assignSenses() {
     this.keySenses = [

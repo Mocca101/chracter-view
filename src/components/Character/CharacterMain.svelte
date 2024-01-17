@@ -64,6 +64,8 @@
 
     assignFromStatblock(sectionedCharacterFile);
 
+    char.headings = [...char.headings, {original: sectionedCharacterFile.personality, edited: sectionedCharacterFile.personality}]
+
     char.generalPersonality = sectionedCharacterFile.generalPersonality;
     char.personalityTraits = sectionedCharacterFile.personalityTraits;
   }
@@ -127,15 +129,7 @@
     if (!sectionedCharacterFile) return;
     sectionedCharacterFile.writeBack(char);
   }
-
-  let heading = null;
-
-  $: if(sectionedCharacterFile) {
-    heading = sectionedCharacterFile.sections.filter(s => s.type === 'heading' && s.level > 0)[0] as HeadingSection;  
-  } else {
-    heading = null;
-  }
-
+ 
 </script>
 
 <div class="w-6/12 mx-auto">
@@ -167,8 +161,10 @@
     </span>
   </div>
 
-  {#if heading && heading.text}
-    <HeadingTextblock heading={heading} />    
+  {#if char.headings && char.headings.length > 0}
+    {#each char.headings as heading, i}
+      <HeadingTextblock bind:heading={heading.edited} />
+    {/each} 
   {/if}
 
   <EntityView bind:entity={char} />

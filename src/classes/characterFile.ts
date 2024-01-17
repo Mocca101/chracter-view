@@ -44,6 +44,12 @@ export default class CharacterFile implements SectionedFile {
     return firstParagraph(descriptionHeading).text.trim() ?? '';
   }
 
+  get personality() : HeadingSection | null | undefined {
+    if(this.sections.length < 1) return null;
+
+    return headingByName(this.sections, personalityHeadingOptions.title);
+  }
+
   get personalityTraits() {
     const personalityHeading = headingByName(this.sections, personalityHeadingOptions.title);
 
@@ -104,38 +110,112 @@ export default class CharacterFile implements SectionedFile {
 
       // Replace the description with the new one
 
-      fileString = writeUnderHeading(
-        headingByName(this.sections, this.p.settings.descriptionHeading),
-        fileString,
-        character.description);
+      // fileString = writeUnderHeading(
+      //   headingByName(this.sections, this.p.settings.descriptionHeading),
+      //   fileString,
+      //   character.description);
 
-      const personalityHeading = headingByName(this.sections, personalityHeadingOptions.title);
+      // const personalityHeading = headingByName(this.sections, personalityHeadingOptions.title);
 
-      if(!personalityHeading) {
-        fileString += `\n\n${'#'.repeat(personalityHeadingOptions.level)} ${personalityHeadingOptions.title}\n\n`;
-      } else {
-        fileString = writeUnderHeading(personalityHeading, fileString, character.generalPersonality);
-      }
+      // if(!personalityHeading) {
+      //   fileString += `\n\n${'#'.repeat(personalityHeadingOptions.level)} ${personalityHeadingOptions.title}\n\n`;
+      // } else {
+      //   fileString = writeUnderHeading(personalityHeading, fileString, character.generalPersonality);
+      // }
 
-      character.personalityTraits.forEach(trait => {
-        console.log(trait);
+      // character.personalityTraits.forEach(trait => {
+      //   console.log(trait);
 
-        const traitHeading = headingByName(this.sections, trait.name);
+      //   const traitHeading = headingByName(this.sections, trait.name);
 
-        if(!traitHeading) {
-          fileString += `\n\n${'#'.repeat(personalityHeadingOptions.level + 1)} ${trait.name}\n\n ${trait.text}`;
-        }
-        else {
-          fileString = writeUnderHeading(traitHeading, fileString, trait.text);
-        }
+      //   if(!traitHeading) {
+      //     fileString += `\n\n${'#'.repeat(personalityHeadingOptions.level + 1)} ${trait.name}\n\n ${trait.text}`;
+      //   }
+      //   else {
+      //     fileString = writeUnderHeading(traitHeading, fileString, trait.text);
+      //   }
+      // });
+
+
+      // TODO: Make sure the edited part of the headings gets the text assigned.
+      //  Idea: make a class of the heading section so that it can be editied with svelte 
+      //  Idea: rewrite the component to somehow 'manually' update the properties of the heading section
+
+      character.headings.forEach(heading => {
+        fileString = writeHeadingSectionBack(heading, fileString);
       });
 
       return fileString
     })
 
   }
-
 }
+
+
+/***
+ * 
+ * Assumes:
+ *  - That a headings title is the same in both the original and edited version
+ *  - That non-heading sections stay in the same order for each heading
+ *  - Structure of the file/heading object to be: 
+ *  {
+ *    heading: {
+ *      text: string,
+ *      subsections: [
+ *      non-heading-sections,
+ *      .
+ *      .
+ *      .
+ *      heading-sections,
+ *      ]
+ *      -> Headings are at the end of the subsections array.
+ *   },
+ *  }
+ */
+function writeHeadingSectionBack(heading: {
+    original: HeadingSection
+    edited: HeadingSection 
+  }, 
+  originalText: string) :string {
+
+  // Split string in pre & post heading
+  let [preHeading, postHeading] = originalText.split(heading.original.text);
+
+  preHeading += heading.original.text;
+
+  
+  for(let i = 0; i < heading.edited.subsections.length; i++) {
+
+    if(i > heading.original.subsections.length){ console.log('extra Sections'); break; }
+
+    const editedSubsection = heading.edited.subsections[i];
+
+    if(editedSubsection.type !== 'heading') {
+      const originalSubsection = heading.original.subsections[i];
+
+      if(!originalSubsection) { console.log('subsecition not present in original'); break; }
+
+      postHeading = postHeading.replace(originalSubsection.text.trim(), editedSubsection.text.trim() + 'edited');
+      continue;
+    }
+
+    const editedHeading = editedSubsection as HeadingSection;
+    console.log(editedHeading.text);
+    const originalHeading = headingByName(heading.original.subsections, editedHeading.text);
+
+    if(!originalHeading) { console.log('heading not present in original'); break; }
+
+    postHeading = writeHeadingSectionBack({ original: originalHeading, edited: editedHeading }, postHeading);
+
+  }
+
+  const newText = preHeading + postHeading;
+
+  // console.log(newText);
+
+  return newText;
+}
+
 
 function writeUnderHeading(heading: HeadingSection | undefined, text: string, textToInsert: string) : string {
   if(!heading) return text;
