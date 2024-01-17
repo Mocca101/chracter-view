@@ -1,4 +1,4 @@
-import { ItemView, TFile, WorkspaceLeaf } from "obsidian";
+import { ItemView, TFile, WorkspaceLeaf, debounce } from "obsidian";
 import CharacterMainSvelte from "../components/Character/CharacterMain.svelte";
 import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
@@ -19,7 +19,7 @@ export class CharacterView extends ItemView {
 
 		this.onFileModified = this.onFileModified.bind(this);
 		
-    this.registerEvent(this.app.vault.on("modify", this.onFileModified));
+    	this.registerEvent(this.app.vault.on("modify", this.onFileModified));
 	}
 
 	getViewType() {
@@ -47,7 +47,17 @@ export class CharacterView extends ItemView {
 		this.component.$destroy();
 	}
 
+	debouncedUpdateFromCharacter = debounce((file: TFile) => this.component.fileUpdated(file), 2000, true);
+
 	private async onFileModified(file: TFile): Promise<void> {
-		this.component.fileUpdated(file);
-  }
+		console.log("File modified", file.path);
+
+		// TODO: Limit how often the view updates on file change, to avoid lag
+		// Get activeCharacter from component
+
+		if (file === this.component.$$.props.activeCharacter) {
+			this.debouncedUpdateFromCharacter(file);
+		}
+			
+  	}
 }

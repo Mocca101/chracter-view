@@ -10,7 +10,7 @@
   import PersonalityUI from "./PersonalityUI.svelte";
   import SensesUI from "./SensesUI.svelte";
   import ProficienciesUi from "./ProficienciesUI.svelte";
-  import { Notice, stringifyYaml, TFile } from "obsidian";
+  import { debounce, Notice, stringifyYaml, TFile } from "obsidian";
   import CharacterSelect from "./CharacterSelect.svelte";
   import CharacterFile from "../../classes/characterFile";
   import Character from "../../classes/character";
@@ -19,7 +19,6 @@
   import { FilePlus, SaveIcon } from "lucide-svelte";
   import { parseFile } from "../../utils/fileParser";
   import HeadingTextblock from "../BaseUI/HeadingTextblock.svelte";
-  import type { HeadingSection } from "../../utils/fileParser"
 
   let p: ObsidianCharacterView;
   mainStore.plugin.subscribe((plugin) => (p = plugin));
@@ -77,10 +76,13 @@
     char.statblock = statblock;
   }
 
+  const debouncedUpdateFromCharacter = debounce(updateFromCharacter, 2000, true);
+
   const onIndexed = p.registerEvent(
     p.app.metadataCache.on("changed", (file: TFile) => {
       if (file.path === activeCharacter?.path) {
-        updateFromCharacter();
+        console.log("File changed")
+        debouncedUpdateFromCharacter();
       }
     })
   );
