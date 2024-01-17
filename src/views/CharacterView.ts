@@ -57,7 +57,7 @@ export class CharacterView extends ItemView {
 
 		const activeCharacter = this.component.$$.ctx[this.component.$$.props.activeCharacter]
 
-		if (file.path === activeCharacter.path) {
+		if (file.path === activeCharacter?.path) {
 			this.debouncedUpdateFromCharacter(file);
 		}
 

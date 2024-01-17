@@ -5,7 +5,7 @@
     import BaseContainerRect from "./BaseContainerRect.svelte";
     import { onMount } from "svelte";
 
-    export let heading: HeadingSection | undefined | null = undefined;    
+    export let heading: HeadingSection | undefined | null = undefined;
 
     export let collapsibleOpen = false;
     export let defaultOpen = true;
@@ -29,9 +29,11 @@
             type: 'heading',
             level: heading.level + 1,
             text: '#'.repeat(heading.level + 1) + ' ' + newSubheadingTitle ?? 'New Subheading',
+            new: true,
             subsections: [{
                 type: 'paragraph',
-                text: 'New Paragraph'
+                text: 'New Paragraph',
+                new: true,
             }]
         }
         heading.subsections = [...heading.subsections, newSubheading];
@@ -56,7 +58,7 @@
                 {/if}
                 <span class="sr-only">Toggle</span>
             </Collapsible.Trigger>
-            <Collapsible.Content>    
+            <Collapsible.Content>
                 {#each heading.subsections as section}
                     {#if section.type === 'paragraph'}
                         {#if section.editedText}
@@ -73,7 +75,7 @@
                             </div>
                         {/if}
                     {:else if section.type === 'heading'}
-                        <svelte:self class="my-2" bind:heading={section} defaultOpen={false} />                        
+                        <svelte:self class="my-2" bind:heading={section} defaultOpen={false} />
                     {/if}
                 {/each}
 
@@ -82,7 +84,7 @@
                     <button class="w-full p-2 text-center" on:click={() => editNewSubheadingTitle = true}>Add Subheading</button>
                 {:else}
                     <div class="flex gap-2">
-                        <input type="text" class="flex-1 p-2" bind:value={newSubheadingTitle} 
+                        <input type="text" class="flex-1 p-2" bind:value={newSubheadingTitle}
                             on:keydown={(e) => {
                                 if (e.key === 'Enter') addSubheading();
                             }

@@ -4,8 +4,9 @@ import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
 import type Character from "./character";
 import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
-import { firstParagraph, headingByName, type CodeSection, type Section, type YamlSection, type HeadingSection } from "../utils/fileParser";
+import { firstParagraph, headingByName, type CodeSection, type Section, type YamlSection, type HeadingSection, allText } from "../utils/fileParser";
 import type { personalityTrait } from "../types/personality";
+import { text } from "stream/consumers";
 
 
 const personalityHeadingOptions = {
@@ -138,7 +139,7 @@ export default class CharacterFile implements SectionedFile {
 
 
       // TODO: Make sure the edited part of the headings gets the text assigned.
-      //  Idea: make a class of the heading section so that it can be editied with svelte 
+      //  Idea: make a class of the heading section so that it can be editied with svelte
       //  Idea: rewrite the component to somehow 'manually' update the properties of the heading section
 
       character.headings.forEach(heading => {
@@ -157,7 +158,7 @@ export default class CharacterFile implements SectionedFile {
  * Assumes:
  *  - That a headings title is the same in both the original and edited version
  *  - That non-heading sections stay in the same order for each heading
- *  - Structure of the file/heading object to be: 
+ *  - Structure of the file/heading object to be:
  *  {
  *    heading: {
  *      text: string,
@@ -169,7 +170,7 @@ export default class CharacterFile implements SectionedFile {
  *   },
  *  }
  */
-function writeHeadingSectionBack(heading: HeadingSection, 
+function writeHeadingSectionBack(heading: HeadingSection,
   originalText: string) :string {
 
   console.log(heading)
@@ -177,18 +178,46 @@ function writeHeadingSectionBack(heading: HeadingSection,
   // Split string in pre & post heading
   let [preHeading, postHeading] = originalText.split(heading.text);
 
+
   preHeading += heading.text;
 
-  
-  for(let i = 0; i < heading.subsections.length; i++) {
 
-    const subsection = heading.subsections[i];    
+  for(let i = 0; i < heading.subsections.length; i++) {
+    const subsection = heading.subsections[i];
+
+    if(subsection.new) {
+      subsection.new = false;
+      // at the top: add subsection text + newline
+      // in the middle: find previous, and insert with newline + subsection text + newline
+      // at the end: add subsection text + newline
+
+      let text = subsection.text + '\n';
+
+      if(subsection.type === 'heading') {
+        text += allText(subsection.subsections)
+      }
+
+      // At the Top
+      if(i === 0) {
+        postHeading = text + '\n' + postHeading;
+        continue;
+      }
+
+      // At the end
+      if(i === heading.subsections.length - 1) {
+        postHeading += '\n' + text;
+        continue;
+      }
+
+      // In the middle
+      const prevSection = heading.subsections[i - 1];
+      postHeading = postHeading.replace(prevSection.text, prevSection.text + '\n' + text + '\n');
+      continue
+    }
 
     if(subsection.type !== 'heading') {
       if(!subsection.editedText){ console.log('Section not edited'); continue; };
-      
-      postHeading = postHeading.replace(subsection.text.trim(), subsection.editedText.trim());
-      
+      postHeading = postHeading.replace(subsection.text, subsection.editedText);
       continue;
     }
 

@@ -10,6 +10,7 @@ export function parseFile(fileString: string) : Section[] {
 type BaseSection = {
     text: string;
     editedText?: string;
+    new?: boolean;
 }
 
 export type CodeSection = BaseSection & {
@@ -124,4 +125,17 @@ export function headingByName(sections: Section[], name: string) : HeadingSectio
 
 export function firstParagraph(heading: HeadingSection) : ParagraphSection | null {
     return heading.subsections.find(section => section.type === 'paragraph') as ParagraphSection;
+}
+
+export function allText(sections: Section[]) : string {
+    let text = '';
+    for(const section of sections) {
+        if(section.type === 'heading') {
+            text += section.text + '\n';
+            text += allText(section.subsections);
+            continue;
+        }
+        text += section.text + '\n';
+    }
+    return text;
 }
