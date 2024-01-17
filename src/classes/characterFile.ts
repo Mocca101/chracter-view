@@ -227,7 +227,5 @@ function writeHeadingSectionBack(heading: HeadingSection,
 
   const newText = preHeading + postHeading;
 
-  // console.log(newText);
-
   return newText;
 }
