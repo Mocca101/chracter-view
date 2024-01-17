@@ -153,7 +153,7 @@ export default class CharacterFile implements SectionedFile {
 
 
 /***
- * 
+ * Tries to writa a heading section (including it's subsections) back into the given string.
  * Assumes:
  *  - That a headings title is the same in both the original and edited version
  *  - That non-heading sections stay in the same order for each heading
@@ -162,11 +162,8 @@ export default class CharacterFile implements SectionedFile {
  *    heading: {
  *      text: string,
  *      subsections: [
- *      non-heading-sections,
- *      .
- *      .
- *      .
- *      heading-sections,
+ *        [...non-heading-sections],
+ *        [...heading-sections],
  *      ]
  *      -> Headings are at the end of the subsections array.
  *   },
@@ -188,49 +185,20 @@ function writeHeadingSectionBack(heading: HeadingSection,
     const subsection = heading.subsections[i];    
 
     if(subsection.type !== 'heading') {
-      console.log('non-heading subsection', subsection);
-
       if(!subsection.editedText){ console.log('Section not edited'); continue; };
       
-      console.log('replacing:\n', subsection.text.trim(), '\nwith: \n', subsection.editedText.trim());
-
       postHeading = postHeading.replace(subsection.text.trim(), subsection.editedText.trim());
-
-      //console.log('post heading', postHeading);
       
       continue;
     }
 
     const subHeading = subsection as HeadingSection;
-    console.log(subHeading.text);
-
     postHeading = writeHeadingSectionBack(subHeading, postHeading);
-
   }
-
-  console.log('pre heading', preHeading);
 
   const newText = preHeading + postHeading;
 
   // console.log(newText);
 
   return newText;
-}
-
-
-function writeUnderHeading(heading: HeadingSection | undefined, text: string, textToInsert: string) : string {
-  if(!heading) return text;
-
-  // Split file into pre & post heading.
-  // This is to only replace the text after the heading and not match any previous occurences.
-  const parts = text.split(heading.text);
-  const preDescription = parts[0];
-  let postDescription = parts[1];
-
-  const descriptionParagraph = firstParagraph(heading);
-
-  if(!descriptionParagraph) postDescription = textToInsert + postDescription;
-  else postDescription = postDescription.replace(descriptionParagraph.text.trim(), textToInsert.trim());
-
-  return preDescription + heading.text + '\n' + postDescription;
 }
