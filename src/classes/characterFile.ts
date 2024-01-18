@@ -181,13 +181,14 @@ function writeHeadingSectionBack(heading: HeadingSection,
     const subsection = heading.subsections[i];
 
     if(subsection.new) {
-
       subsection.new = false;
       // at the top: add subsection text + newline
       // in the middle: find previous, and insert with newline + subsection text + newline
       // at the end: add subsection text + newline
 
       let text = subsection.text + '\n';
+      if(subsection.editedText) text = subsection.editedText + '\n';
+
 
       if(subsection.type === 'heading') {
         text += allText(subsection.subsections)
