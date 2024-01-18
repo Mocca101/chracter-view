@@ -186,41 +186,20 @@ function writeHeadingSectionBack(heading: HeadingSection,
       console.log('New subsection', subsection);
       subsection.new = false;
 
-      // at the top: add subsection text + newline
-      // in the middle: find previous, and insert with newline + subsection text + newline
-      // at the end: add subsection text + newline
-
       let text = subsection.text + '\n';
       if(subsection.editedText) text = subsection.editedText + '\n';
 
+      if(subsection.type === 'heading') text += allText(subsection.subsections);
 
-      if(subsection.type === 'heading') {
-        text += allText(subsection.subsections)
-      }
-
-      // At the Top
-      if(i === 0) {
-        postHeading = text + '\n' + postHeading;
-        continue;
-      }
-
-      // // At the end
-      // if(i === heading.subsections.length - 1) {
-      //   postHeading += '\n' + text;
-      //   continue;
-      // }
-
-      // In the middle
-      const prevSection = heading.subsections[i - 1];
-      postHeading = postHeading.replace(prevSection.text, prevSection.text + '\n' + text + '\n');
+      preHeading += '\n' + text + '\n';
       continue
     }
 
     if(subsection.type !== 'heading') {
-      if(!subsection.editedText){ console.log('Section not edited', subsection); continue; };
+      let [preSection, postSection] = postHeading.split(subsection.text);
 
-      postHeading = postHeading.replace(subsection.text, subsection.editedText);
-
+      preHeading += preSection + (subsection.editedText ?? subsection.text);
+      postHeading = postSection
       continue;
     }
 
