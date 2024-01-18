@@ -142,7 +142,7 @@ export default class CharacterFile implements SectionedFile {
       //  Idea: rewrite the component to somehow 'manually' update the properties of the heading section
 
       character.headings.forEach(heading => {
-        fileString = writeHeadingSectionBack(heading, fileString);
+        fileString = writeHeadingSectionBack(heading, fileString).join('');
       });
 
       return fileString
@@ -153,6 +153,7 @@ export default class CharacterFile implements SectionedFile {
 
 
 /***
+ * @returns The input string as a string split into the edited and the remeaining part of the string if there is any.
  * Tries to writa a heading section (including it's subsections) back into the given string.
  * Assumes:
  *  - That a headings title is the same in both the original and edited version
@@ -170,13 +171,12 @@ export default class CharacterFile implements SectionedFile {
  *  }
  */
 function writeHeadingSectionBack(heading: HeadingSection,
-  originalText: string) :string {
+  originalText: string) :string[] {
 
-  let [preHeading, postHeading] = originalText.split(heading.text);
+  let [preHeading, postHeading] = splitOnFirst(originalText, heading.text);
+
 
   preHeading += heading.text;
-
-  console.log('Writing back heading', heading);
   
 
   for(let i = 0; i < heading.subsections.length; i++) {
@@ -196,7 +196,7 @@ function writeHeadingSectionBack(heading: HeadingSection,
     }
 
     if(subsection.type !== 'heading') {
-      let [preSection, postSection] = postHeading.split(subsection.text);
+      let [preSection, postSection] = splitOnFirst(postHeading, subsection.text);
 
       preHeading += preSection + (subsection.editedText ?? subsection.text);
       postHeading = postSection
@@ -204,10 +204,15 @@ function writeHeadingSectionBack(heading: HeadingSection,
     }
 
     const subHeading = subsection as HeadingSection;
-    postHeading = writeHeadingSectionBack(subHeading, postHeading);
+    const [pre, post] = writeHeadingSectionBack(subHeading, postHeading);
+    preHeading += pre;
+    postHeading = post;
   }
 
-  const newText = preHeading + postHeading;
+  return [preHeading, postHeading];
+}
 
-  return newText;
+function splitOnFirst (str: string, sep: string) {
+  const index = str.indexOf(sep);
+  return index < 0 ? [str] : [str.slice(0, index), str.slice(index + sep.length)];
 }

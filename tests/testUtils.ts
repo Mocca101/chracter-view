@@ -15,7 +15,7 @@ const originalStatblock: string =
   "spells:\n  - some other spell\n" +
   "\n```\n"
 
-const defaulltPersonality: string = 
+const defaultPersonality: string = 
   "\n### Personality\n" +
   "test text\n" +
   "\n#### sub Personality\n" +
@@ -25,9 +25,8 @@ export const kuiniString: string =
   "---\nfileClass: DnD Character\ntype: DnD Character\nSource:\ntags: []\n---\n" +
   "\n[[Dungeons and Dragons|DnD]] - [[Character]]\n" +
   "\n### Description\n\nA non-default #dnd-character.\n" +
-  defaulltPersonality +
+  defaultPersonality +
   "\n### Character\n\n\nclass:: Fighter, Barbarian, Wizard\nrace:: Elf\ngender:: ♂\n\n" +
-
   originalStatblock
 
 // Edited
@@ -70,7 +69,7 @@ export const editedKuiniString: string =
   "---\nfileClass: DnD Character\ntype: DnD Character\nSource:\ntags: []\n---\n" +
   "\n[[Dungeons and Dragons|DnD]] - [[Character]]\n" +
   "\n### Description\n\nA non-default #dnd-character.\n" +
-  defaulltPersonality +
+  defaultPersonality +
   // Added a new subheading
   `\n#### ${newSubheadingString}\n` +
   newParagraphString +
