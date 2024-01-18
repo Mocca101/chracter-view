@@ -18,7 +18,7 @@
   import type ObsidianCharacterView from "../../main";
   import { FilePlus, SaveIcon } from "lucide-svelte";
   import { parseFile } from "../../utils/fileParser";
-  import HeadingTextblock from "../BaseUI/HeadingTextblock.svelte";
+  import HeadingTextblock from "../BaseUI/Sections/CollapsibleHeading.svelte";
 
   let p: ObsidianCharacterView;
   mainStore.plugin.subscribe((plugin) => (p = plugin));

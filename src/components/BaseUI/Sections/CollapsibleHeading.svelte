@@ -1,9 +1,9 @@
 <script lang="ts">
-    import ParagraphEditor from './Sections/ParagraphEditor.svelte';
+    import ParagraphEditor from './ParagraphEditor.svelte';
     import { Collapsible } from "bits-ui";
-    import { type HeadingSection } from "../../utils/fileParser";
+    import { type HeadingSection } from "../../../utils/fileParser";
     import { ChevronDownIcon, ChevronUpIcon, Pen } from 'lucide-svelte'
-    import BaseContainerRect from "./BaseContainerRect.svelte";
+    import BaseContainerRect from "../BaseContainerRect.svelte";
     import { onMount } from "svelte";
 
     export let heading: HeadingSection | undefined | null = undefined;
