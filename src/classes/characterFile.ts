@@ -200,11 +200,11 @@ function writeHeadingSectionBack(heading: HeadingSection,
         continue;
       }
 
-      // At the end
-      if(i === heading.subsections.length - 1) {
-        postHeading += '\n' + text;
-        continue;
-      }
+      // // At the end
+      // if(i === heading.subsections.length - 1) {
+      //   postHeading += '\n' + text;
+      //   continue;
+      // }
 
       // In the middle
       const prevSection = heading.subsections[i - 1];

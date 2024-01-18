@@ -73,7 +73,7 @@
                     <button class="w-full p-2 text-center" on:click={() => editNewSubheadingTitle = true}>Add Subheading</button>
                 {:else}
                     <div class="flex gap-2">
-                        <input type="text" class="flex-1 p-2" bind:value={newSubheadingTitle}
+                        <input type="text" class="flex-1 p-2" name="New Subheading" bind:value={newSubheadingTitle}
                             on:keydown={(e) => {
                                 if (e.key === 'Enter') addSubheading();
                             }
