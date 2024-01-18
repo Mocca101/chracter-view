@@ -2,9 +2,11 @@ import { ElectronApplication, Page, _electron as electron } from '@playwright/te
 import { test, expect } from '@playwright/test'
 import 'dotenv/config'
 import { editedKuiniString, kuiniString, newParagraphString, newSubheadingString } from './testUtils';
+import fs from 'fs';
 
 const vaultName = process.env.VAULTNAME;
 const pathToExe = process.env.TO_EXE;
+const pathToVault = process.env.TO_VAULT;
 
 let electronApp: ElectronApplication;
 let window: Page;
@@ -69,22 +71,11 @@ test('create new subheading', async () => {
 
     await window.keyboard.press('Control+s');
 
-    await window.keyboard.press('Control+O');
+    
 
-    await window.getByPlaceholder('Find or create a note...').fill(testNoteName);
-    await window.locator('.suggestion-item').first().click();
-
-
-    await window.keyboard.press('Control+P');
-    await window.getByPlaceholder('Select a command...').fill('Toggle Live Preview/Source mode');
-    await window.keyboard.press('Enter');
-
-
-
-    const fileText = await window.locator('.cm-contentContainer').allInnerTexts();
+    const filePath = `${pathToVault}/${testNoteName}.md`;
+    const fileText = fs.readFileSync(filePath, 'utf8');
     console.log(fileText);
 
-    expect(fileText.join('\n')).toEqual(editedKuiniString);
-
+    expect(fileText).toEqual(editedKuiniString);
 });
-
