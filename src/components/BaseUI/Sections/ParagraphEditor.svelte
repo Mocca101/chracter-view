@@ -5,7 +5,7 @@
     export let paragraph: ParagraphSection | undefined | null = undefined;
 </script>
 
-{#if paragraph.editedText}
+{#if paragraph.editedText !== undefined}
     <div data-testId="editable-paragraph" contenteditable bind:innerText={paragraph.editedText} class="m-2"/>
 {:else}
     <div class="m-2">
