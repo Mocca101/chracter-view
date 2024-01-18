@@ -1,7 +1,7 @@
 import { ElectronApplication, Page, _electron as electron } from '@playwright/test'
 import { test, expect } from '@playwright/test'
 import 'dotenv/config'
-import { kuiniString, newParagraphString, newSubheadingString } from './testUtils';
+import { editedKuiniString, kuiniString, newParagraphString, newSubheadingString } from './testUtils';
 
 const vaultName = process.env.VAULTNAME;
 const pathToExe = process.env.TO_EXE;
@@ -9,10 +9,11 @@ const pathToExe = process.env.TO_EXE;
 let electronApp: ElectronApplication;
 let window: Page;
 
+const obsidianOpen = 'obsidian://open?';
+const obsidianCreate = 'obsidian://new?';
+const testNoteName = 'Kuini_base_spec';
+
 test.beforeAll(async () => {
-  const obsidianOpen = 'obsidian://open?';
-  const obsidianCreate = 'obsidian://new?';
-  const testNoteName = 'Kuini_base_spec';
   // replace all '#' in the kuiniString
   const content = kuiniString.replace(/#/g, '%23');
 
@@ -68,4 +69,22 @@ test('create new subheading', async () => {
 
     await window.keyboard.press('Control+s');
 
+    await window.keyboard.press('Control+O');
+
+    await window.getByPlaceholder('Find or create a note...').fill(testNoteName);
+    await window.locator('.suggestion-item').first().click();
+
+
+    await window.keyboard.press('Control+P');
+    await window.getByPlaceholder('Select a command...').fill('Toggle Live Preview/Source mode');
+    await window.keyboard.press('Enter');
+
+
+
+    const fileText = await window.locator('.cm-contentContainer').allInnerTexts();
+    console.log(fileText);
+
+    expect(fileText.join('\n')).toEqual(editedKuiniString);
+
 });
+
