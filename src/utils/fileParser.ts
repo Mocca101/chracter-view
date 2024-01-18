@@ -139,12 +139,14 @@ export function firstParagraph(heading: HeadingSection) : ParagraphSection | nul
 }
 
 export function allText(sections: Section[]) : string {
-    let text = '';
+    let text = '';    
+
+    const sectionText = (section: Section) => section.editedText ?? section.text;
 
     for(let i = 0; i < sections.length; i++) {
         const section = sections[i];
-        if(i === 0) text += section.text;
-        else text += '\n' + section.text;
+        if(i === 0) text += sectionText(section);
+        else text += '\n' + sectionText(section);
         if(section.type === 'heading') {
             text += '\n' + allText(section.subsections);
         }

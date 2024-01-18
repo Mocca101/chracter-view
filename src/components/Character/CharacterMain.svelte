@@ -158,6 +158,7 @@
       <button on:click={() => console.log(heading)}>Print Heading</button>
     {/each}
   {/if}
+  <button on:click={() => console.log(char)}>Print Entity</button>
 
   <EntityView bind:entity={char} />
 

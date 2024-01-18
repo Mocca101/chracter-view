@@ -96,7 +96,7 @@ export default class CharacterFile implements SectionedFile {
     return this.sections.find(section => section.type === 'code' && section.language === 'statblock') as CodeSection;
   }
 
-  async writeBack(character: Character) {
+  writeBack(character: Character) {
     const statblockString = this.statblockSection.text;
     const returnStatblock: Statblock = zStatblock.passthrough().parse(parseYaml(statblockString));
 
@@ -176,12 +176,16 @@ function writeHeadingSectionBack(heading: HeadingSection,
 
   preHeading += heading.text;
 
+  console.log('Writing back heading', heading);
+  
 
   for(let i = 0; i < heading.subsections.length; i++) {
     const subsection = heading.subsections[i];
 
     if(subsection.new) {
+      console.log('New subsection', subsection);
       subsection.new = false;
+
       // at the top: add subsection text + newline
       // in the middle: find previous, and insert with newline + subsection text + newline
       // at the end: add subsection text + newline

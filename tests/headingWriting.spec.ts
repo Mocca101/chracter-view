@@ -75,7 +75,6 @@ test('create new subheading', async () => {
 
     const filePath = `${pathToVault}/${testNoteName}.md`;
     const fileText = fs.readFileSync(filePath, 'utf8');
-    console.log(fileText);
 
     expect(fileText).toEqual(editedKuiniString);
 });
