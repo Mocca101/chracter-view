@@ -1,8 +1,8 @@
-import { defineConfig } from 'playwright/test';
+import { defineConfig } from "@playwright/test";
 
 export default defineConfig({
   // Look for test files in the "tests" directory, relative to this configuration file.
-  testDir: 'test',
+  testDir: 'tests',
 
   // Run all tests in parallel.
   fullyParallel: false,

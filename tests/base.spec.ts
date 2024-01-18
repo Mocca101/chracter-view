@@ -1,5 +1,4 @@
-import { ElectronApplication, Page, _electron as electron } from 'playwright'
-import { test, expect } from 'playwright/test'
+import { ElectronApplication, Page, _electron as electron, test, expect } from '@playwright/test'
 import 'dotenv/config'
 import { BaseStats } from '../src/data/BaseStats';
 import { DnDBaseSkills } from '../src/data/BaseSkills';
@@ -159,7 +158,7 @@ test.beforeAll(async () => {
   const testNoteName = 'Kuini_base_spec';
   // replace all '#' in the kuiniString
   const content = kuiniString.replace(/#/g, '%23');
- 
+
 
   let args: string[] = [''];
 
@@ -203,24 +202,24 @@ test('check Proficiency Bonus', async () => {
 // run skill test individually for each skill
 
 for (let i = 0; i < DnDBaseSkills.length; i++) {
-  test(`check ${DnDBaseSkills[i].name} Skill`, async () => {    
+  test(`check ${DnDBaseSkills[i].name} Skill`, async () => {
     const proficiencyBonus = parseInt(await window.getByTestId('proficiency-bonus').textContent() ?? '');
     const skill = DnDBaseSkills[i];
     const skillContainer = window.getByTestId(`skill-container-${skill.name}`);
     const modifierLocator = skillContainer.getByTestId('skill-modifier');
 
     const proficiencyLocator = await window.getByRole('checkbox', {name: `Toggle ${skill.name} Proficiency`});
-    
+
     let profModifier = parseInt(await proficiencyLocator.getAttribute('data-proficiency') ?? '');
 
     let modifier = await modifierLocator.textContent();
     expect(parseInt(modifier ?? '')).toBe(kuiniSkillsObj[i].expectedValue + proficiencyBonus * profModifier);
 
     await proficiencyLocator.click();
-    profModifier = parseInt(await proficiencyLocator.getAttribute('data-proficiency') ?? '');    
+    profModifier = parseInt(await proficiencyLocator.getAttribute('data-proficiency') ?? '');
     modifier = await modifierLocator.textContent();
     expect(parseInt(modifier ?? '')).toBe(kuiniSkillsObj[i].expectedValue + proficiencyBonus * profModifier);
-    
+
     await proficiencyLocator.click();
     profModifier = parseInt(await proficiencyLocator.getAttribute('data-proficiency') ?? '');
     modifier = await modifierLocator.textContent();

@@ -6,7 +6,7 @@
 </script>
 
 {#if paragraph.editedText}
-    <div contenteditable bind:innerText={paragraph.editedText} class="m-2"/>
+    <div data-testId="editable-paragraph" contenteditable bind:innerText={paragraph.editedText} class="m-2"/>
 {:else}
     <div class="m-2">
         <span class="whitespace-pre-line ">{paragraph.text}</span>
