@@ -62,7 +62,7 @@
         <p
           use:focusEnd
           contenteditable="true" 
-          class="p-0 m-0 border-0 border-b-2 border-dotted"
+          class="p-0 m-0 border-0 border-b-2 border-dotted input-focus"
           bind:innerText={trait}
           on:keydown={(e) => handleKeyPress(e, i)}
           bind:this={textBoxes[i]}
