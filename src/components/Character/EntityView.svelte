@@ -9,6 +9,7 @@
   import BaseContainerRect from "../BaseUI/BaseContainerRect.svelte";
   import ArrayTextField from "../BaseUI/ArrayTextField.svelte";
   import ParagraphEditor from "../BaseUI/Sections/ParagraphEditor.svelte";
+  import { focusEnd } from "../../utils/actions";
 
   export let entity: Character;
 </script>
@@ -20,6 +21,7 @@
         contenteditable
         class="hover:cursor-text"
         bind:innerText={entity.name}
+        use:focusEnd
       >
         {entity.name}
       </h1>

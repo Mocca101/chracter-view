@@ -8,7 +8,17 @@ import type DiceCombo from "../types/diceCombo";
 let plugin: ObsidianCharacterView;
 mainStore.plugin.subscribe((p) => (plugin = p));
 
+export const focusEnd = (element: HTMLElement) => {
+  element.addEventListener('focus', () => {
+        const range = document.createRange();
+    const selection = window.getSelection();
+    range.selectNodeContents(element);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  });
 
+}
 
 export const addDice = (element: HTMLElement, diceOptions: DiceCombo & { label: string, onRollCallback?:(result:number) => void }) => {
   const results = [];

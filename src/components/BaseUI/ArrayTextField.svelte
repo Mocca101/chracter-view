@@ -1,6 +1,6 @@
-
 <script lang="ts">
-  import { afterUpdate, onMount } from "svelte";
+  import { afterUpdate } from "svelte";
+  import { focusEnd } from "../../utils/actions";
 
   export let textArray: string[] = [""];
 
@@ -55,12 +55,14 @@
   let textBoxes: HTMLParagraphElement[] = [];
 
 </script>
-<div class=" flex flex-col gap-1 m-0 p-0">
+<div class="flex flex-col gap-1 p-0 m-0 ">
   {#if textArray && textArray.length > 0}
     {#each textArray as trait, i}
       <div>
-        <p contenteditable="true" class="
-          border-dotted border-0 border-b-2 m-0 p-0"
+        <p
+          use:focusEnd
+          contenteditable="true" 
+          class="p-0 m-0 border-0 border-b-2 border-dotted"
           bind:innerText={trait}
           on:keydown={(e) => handleKeyPress(e, i)}
           bind:this={textBoxes[i]}

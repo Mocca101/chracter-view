@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { focusEnd } from "../../../utils/actions";
     import { type ParagraphSection } from "../../../utils/fileParser";
 
     export let paragraph: ParagraphSection | undefined | null = undefined;
@@ -36,11 +37,11 @@
 {#if paragraph.editedText !== undefined}
     <div 
         use:focusParagraph
+        use:focusEnd
         data-testId="editable-paragraph" 
         contenteditable 
         bind:innerText={paragraph.editedText} 
         class="p-1 m-2 hover:cursor-text input-focus"
-        on:focus={(event) => moveCursorToEnd(event.currentTarget)}
     />
 {:else}
     <div 
