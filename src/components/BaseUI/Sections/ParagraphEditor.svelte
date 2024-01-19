@@ -1,21 +1,57 @@
 <script lang="ts">
     import { type ParagraphSection } from "../../../utils/fileParser";
-    import { Pen } from 'lucide-svelte'
 
     export let paragraph: ParagraphSection | undefined | null = undefined;
+
+    function updateParagraph() {
+        if (!paragraph) return;
+        paragraph.editedText = paragraph.text;
+    }
+
+    function focusParagraph(node: HTMLElement) {
+        node.focus();
+        moveCursorToEnd(node);
+    }
+
+    function moveCursorToEnd(node: HTMLElement) {
+        const selection = window.getSelection();
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        range.collapse(false);
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+
+    function handleKeyDown(e: KeyboardEvent) {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            updateParagraph();
+        }
+    }
+
 </script>
 
 {#if paragraph.editedText !== undefined}
-    <div data-testId="editable-paragraph" contenteditable bind:innerText={paragraph.editedText} class="m-2"/>
+    <div 
+        use:focusParagraph
+        data-testId="editable-paragraph" 
+        contenteditable 
+        bind:innerText={paragraph.editedText} 
+        class="p-1 m-2 hover:cursor-text input-focus"
+        on:focus={(event) => moveCursorToEnd(event.currentTarget)}
+    />
 {:else}
-    <div class="m-2">
-        <span class="whitespace-pre-line ">{paragraph.text}</span>
-        <div class="p-0 m-0 text-center">
-            <button class="p-2 text-center" on:click={() => paragraph.editedText = paragraph.text}>
-                <Pen size="12"/>
-                <span class="sr-only">Edit</span>
-            </button>
-        </div>
+    <div 
+        tabindex="0"
+        role="textbox"
+        class="max-w-full p-1 m-2 whitespace-pre-line hover:cursor-text input-focus"
+        aria-label="Edit" 
+        on:click={() => updateParagraph()} 
+        on:keydown={handleKeyDown}
+        >
+        {paragraph.text}
     </div>
 {/if}
 

@@ -4,7 +4,7 @@ import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
 import type Character from "./character";
 import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
-import { firstParagraph, headingByName, type CodeSection, type Section, type YamlSection, type HeadingSection, allText } from "../utils/fileParser";
+import { firstParagraph, headingByName, type CodeSection, type Section, type YamlSection, type HeadingSection, allText, type ParagraphSection } from "../utils/fileParser";
 import type { personalityTrait } from "../types/personality";
 
 
@@ -30,18 +30,18 @@ export default class CharacterFile implements SectionedFile {
     return this.sections.find(section => section.type === 'yaml') as YamlSection | null;;
   }
 
-  get description() : string {
-    if(this.sections.length < 1) return '';
+  get description() : ParagraphSection {
+    if(this.sections.length < 1) return null;
 
     const descriptionHeading = headingByName(this.sections, this.p.settings.descriptionHeading);
 
-    if(!descriptionHeading) return '';
+    if(!descriptionHeading) return null;
 
     const descriptionParagraph = firstParagraph(descriptionHeading);
 
-    if(!descriptionParagraph || !descriptionHeading.text) return '';
+    if(!descriptionParagraph || !descriptionHeading.text) return null;
 
-    return firstParagraph(descriptionHeading).text.trim() ?? '';
+    return firstParagraph(descriptionHeading);
   }
 
   get personality() : HeadingSection | null | undefined {
@@ -175,9 +175,7 @@ function writeHeadingSectionBack(heading: HeadingSection,
 
   let [preHeading, postHeading] = splitOnFirst(originalText, heading.text);
 
-
-  preHeading += heading.text;
-  
+  preHeading += heading.text;  
 
   for(let i = 0; i < heading.subsections.length; i++) {
     const subsection = heading.subsections[i];

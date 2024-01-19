@@ -8,6 +8,7 @@
   import type Character from "../../classes/character";
   import BaseContainerRect from "../BaseUI/BaseContainerRect.svelte";
   import ArrayTextField from "../BaseUI/ArrayTextField.svelte";
+  import ParagraphEditor from "../BaseUI/Sections/ParagraphEditor.svelte";
 
   export let entity: Character;
 </script>
@@ -23,10 +24,8 @@
         {entity.name}
       </h1>
       <p>Level: <TextNumberInput bind:value={entity.cr} /></p>
-      <div
-        contenteditable
-        class="my-3 rounded hover:cursor-text focus:outline focus:outline-1 outline-offset-8"
-        bind:innerText={entity.description}
+      <ParagraphEditor
+        bind:paragraph={entity.description}
       />
     </div>
 

@@ -102,7 +102,7 @@
       "\n```statblock\n" + stringifyYaml(char.statblock) + "```\n"
     );
 
-    content = content.replace("{{description}}", char.description);
+    content = content.replace("{{description}}", (char.description.editedText ?? char.description.text));
 
     if (await p.app.vault.adapter.exists(newPath)) {
       new Notice(
