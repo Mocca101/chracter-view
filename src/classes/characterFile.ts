@@ -142,7 +142,7 @@ export default class CharacterFile implements SectionedFile {
       //  Idea: rewrite the component to somehow 'manually' update the properties of the heading section
 
       character.headings.forEach(heading => {
-        fileString = writeHeadingSectionBack(heading, fileString).join('');
+        fileString = writeHeadingSectionBack(heading, {fullText: fileString}).join('');
       });
 
       return fileString
@@ -171,11 +171,32 @@ export default class CharacterFile implements SectionedFile {
  *  }
  */
 function writeHeadingSectionBack(heading: HeadingSection,
-  originalText: string) :string[] {
+  text: {fullText?: string, splitText?: {pre: string, post:string}}) : string[] {
+  let preHeading:string = '';
+  let postHeading:string = '';
 
-  let [preHeading, postHeading] = splitOnFirst(originalText, heading.text);
+  console.log('heading', heading)
+  console.log('text', text)
 
-  preHeading += heading.text;  
+  if(text.fullText) {
+    [preHeading, postHeading] = splitOnFirst(text.fullText, heading.text);
+    preHeading += heading.text;
+  }
+  else if(text.splitText) {
+    preHeading = text.splitText.pre;
+    postHeading = text.splitText.post;
+
+    const [pre, post] = splitOnFirst(postHeading, heading.text);
+    preHeading += pre + heading.text;
+    postHeading = post;
+
+  } else {
+    throw new Error('No text given to write back');
+  }
+
+  console.log('pre', preHeading)
+  console.log('post', postHeading)
+
 
   for(let i = 0; i < heading.subsections.length; i++) {
     const subsection = heading.subsections[i];
@@ -202,13 +223,40 @@ function writeHeadingSectionBack(heading: HeadingSection,
     }
 
     const subHeading = subsection as HeadingSection;
-    const [pre, post] = writeHeadingSectionBack(subHeading, postHeading);
-    preHeading += pre;
-    postHeading = post;
+    [preHeading, postHeading] = writeHeadingSectionBack(subHeading, {splitText: {pre: preHeading, post: postHeading}});
   }
 
   return [preHeading, postHeading];
 }
+
+function writeBackSection(section: Section, text: {fullText?: string, splitText?: {pre: string, post:string}}) : string {
+  let preText:string = '';
+  let postText:string = '';
+
+  if(text.fullText) [preText, postText] = splitOnFirst(text.fullText, section.text);
+  else if(text.splitText) {
+    preText = text.splitText.pre;
+    postText = text.splitText.post;
+  } else {
+    throw new Error('No text given to write back');
+  }
+
+
+  if(section.type === 'heading') {
+    return writeHeadingSectionBack(section as HeadingSection, {splitText: {pre: preText, post: postText}}).join('');
+  }
+  if(section.new) {    
+    section.new = false;
+
+    let text = section.text + '\n';
+    if(section.editedText) text = section.editedText + '\n';
+
+
+  }
+
+  return '';
+}
+
 
 function splitOnFirst (str: string, sep: string) {
   const index = str.indexOf(sep);

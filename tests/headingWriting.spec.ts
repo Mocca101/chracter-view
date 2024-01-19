@@ -63,7 +63,8 @@ test('create new subheading', async () => {
     const subheadingParent = await subheading.locator('..');
 
     await expect(subheadingParent.getByText('New Paragraph')).toBeVisible();
-    await subheadingParent.getByRole('button', { name: 'Edit'}).click();
+    await expect(subheadingParent.getByText('New Paragraph')).toHaveAttribute('aria-label', 'Edit');
+    await subheadingParent.getByText('New Paragraph').click();
 
     const paragraphInput = await subheadingParent.getByTestId('editable-paragraph');
     await expect(paragraphInput).toBeVisible();
