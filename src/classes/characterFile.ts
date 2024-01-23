@@ -108,6 +108,8 @@ export default class CharacterFile implements SectionedFile {
       // Replace the statblock with the new one
       fileString = fileString.replace(statblockString, stringifyYaml(returnStatblock));
 
+      if(character.description.editedText)fileString = writeBackSection(character.description, ['', fileString]).join('');
+
       // Replace the description with the new one
 
       // fileString = writeUnderHeading(
