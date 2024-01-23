@@ -170,14 +170,16 @@ test.beforeAll(async () => {
     executablePath: pathToExe,
     args
   });
+  
   window = await electronApp.firstWindow();
 
   const characterSelectButton = await window.getByRole('button', { name: 'Select Character'});
 
-  if(!(await characterSelectButton)) {
-    await window.getByLabel('Open Character View').click();  
-  }
-  await expect(characterSelectButton).toBeVisible();
+  // This will fail if there is no other tab besides the character view open and the character view is already open. 
+  // Because, in that case, clicking the button causes the view to close and leaves an empty tab.
+  await window.getByLabel('Open Character View').click();  
+
+  await expect(characterSelectButton).toBeVisible();;
 
   characterSelectButton.click();
 
