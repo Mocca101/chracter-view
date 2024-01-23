@@ -5,6 +5,7 @@
     import { ChevronDownIcon, ChevronUpIcon, Pen } from 'lucide-svelte'
     import BaseContainerRect from "../BaseContainerRect.svelte";
     import { onMount } from "svelte";
+  import AddSubheadingButton from './AddSubheadingButton.svelte';
 
     export let heading: HeadingSection | undefined | null = undefined;
 
@@ -16,30 +17,6 @@
         if(!heading) return;
         collapsibleOpen = defaultOpen;
     })
-
-
-    let newSubheadingTitle = '';
-    let editNewSubheadingTitle = false;
-    $: if (!editNewSubheadingTitle) {
-        newSubheadingTitle = '';
-    }
-
-    function addSubheading() {
-        if (!heading) return;
-        const newSubheading: HeadingSection = {
-            type: 'heading',
-            level: heading.level + 1,
-            text: '#'.repeat(heading.level + 1) + ' ' + newSubheadingTitle ?? 'New Subheading',
-            isNew: true,
-            subsections: [{
-                type: 'paragraph',
-                text: 'New Paragraph',
-                isNew: true,
-            }]
-        }
-        heading.subsections = [...heading.subsections, newSubheading];
-        editNewSubheadingTitle = false;
-    }
 
 </script>
 
@@ -67,21 +44,7 @@
                         <svelte:self class="my-2" bind:heading={section} defaultOpen={false} />
                     {/if}
                 {/each}
-
-                <!-- Add Subheading -->
-                {#if !editNewSubheadingTitle}
-                    <button class="w-full p-2 text-center" on:click={() => editNewSubheadingTitle = true}>Add Subheading</button>
-                {:else}
-                    <div class="flex gap-2">
-                        <input placeholder="New Subheading" type="text" class="flex-1 p-2" bind:value={newSubheadingTitle}
-                            on:keydown={(e) => {
-                                if (e.key === 'Enter') addSubheading();
-                            }
-                        }/>
-                        <button class="p-2 text-center" on:click={addSubheading}>Add</button>
-                        <button class="p-2 text-center" on:click={() => editNewSubheadingTitle = false}>Cancel</button>
-                    </div>
-                {/if}
+                <AddSubheadingButton bind:heading={heading} />
             </Collapsible.Content>
         </BaseContainerRect>
     </Collapsible.Root>
