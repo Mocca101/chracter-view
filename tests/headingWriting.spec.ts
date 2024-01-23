@@ -1,7 +1,7 @@
 import { ElectronApplication, Page, _electron as electron } from '@playwright/test'
 import { test, expect } from '@playwright/test'
 import 'dotenv/config'
-import { editedKuiniString, kuiniString, newParagraphString, newSubheadingString } from './testUtils';
+import { kuiniWithAddedSubheading, kuiniString, newParagraphString, newSubheadingString, defaultPersonalityParagraph, editedParagraphString, kuiniWithEditedParagraph } from './testUtils';
 import fs from 'fs';
 
 const vaultName = process.env.VAULTNAME;
@@ -18,8 +18,6 @@ const testNoteName = 'Kuini_base_spec';
 test.beforeAll(async () => {
   // replace all '#' in the kuiniString
   const content = kuiniString.replace(/#/g, '%23');
-
-
   let args: string[] = [''];
 
   if(vaultName) {
@@ -31,6 +29,8 @@ test.beforeAll(async () => {
     args
   });
   window = await electronApp.firstWindow();
+
+  await window.waitForTimeout(1000);
 
   await window.getByLabel('Open Character View').click();
 
@@ -71,11 +71,32 @@ test('create new subheading', async () => {
     await paragraphInput.fill(newParagraphString);
 
     await window.keyboard.press('Control+s');
-
     
 
     const filePath = `${pathToVault}/${testNoteName}.md`;
     const fileText = fs.readFileSync(filePath, 'utf8');
 
-    expect(fileText).toEqual(editedKuiniString);
+    expect(fileText).toEqual(kuiniWithAddedSubheading);
+});
+
+test('edit Paragraph', async () => {
+  const subheading = await window.getByRole('button', { name: 'Personality Toggle', exact: true });
+  await expect(subheading).toBeVisible();
+
+  const subheadingParent = await subheading.locator('..');
+
+  await expect(subheadingParent.getByText(defaultPersonalityParagraph)).toBeVisible();
+  await expect(subheadingParent.getByText(defaultPersonalityParagraph)).toHaveAttribute('aria-label', 'Edit');
+  await subheadingParent.getByText(defaultPersonalityParagraph).click();
+
+  const paragraphInput = await subheadingParent.getByTestId('editable-paragraph');
+  await expect(paragraphInput).toBeVisible();
+  await paragraphInput.fill(editedParagraphString);
+
+  await window.keyboard.press('Control+s');  
+
+  const filePath = `${pathToVault}/${testNoteName}.md`;
+  const fileText = fs.readFileSync(filePath, 'utf8');
+
+  expect(fileText).toEqual(kuiniWithEditedParagraph);
 });
