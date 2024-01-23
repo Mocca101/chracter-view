@@ -21,7 +21,9 @@ test.beforeEach(async () => {
   let args: string[] = [''];
 
   if(vaultName) {
-    args = [`${obsidianCreate}vault=${vaultName}&name=${testNoteName}&content=${content}&overwrite`]
+    // See: https://help.obsidian.md/Extending+Obsidian/Obsidian+URI
+    // Silent is to not open the note after creation
+    args = [`${obsidianCreate}vault=${vaultName}&name=${testNoteName}&content=${content}&overwrite&silent`]
   }
 
   electronApp = await electron.launch({
@@ -30,11 +32,11 @@ test.beforeEach(async () => {
   });
   window = await electronApp.firstWindow();
 
-  await window.waitForTimeout(1000);
-
-  await window.getByLabel('Open Character View').click();
-
   const characterSelectButton = await window.getByRole('button', { name: 'Select Character'});
+
+  if(!(await characterSelectButton)) {
+    await window.getByLabel('Open Character View').click();  
+  }
   await expect(characterSelectButton).toBeVisible();
 
   characterSelectButton.click();

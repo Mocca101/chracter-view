@@ -163,7 +163,7 @@ test.beforeAll(async () => {
   let args: string[] = [''];
 
   if(vaultName) {
-    args = [`${obsidianCreate}vault=${vaultName}&name=${testNoteName}&content=${content}&overwrite`]
+    args = [`${obsidianCreate}vault=${vaultName}&name=${testNoteName}&content=${content}&overwrite&silent`]
   }
 
   electronApp = await electron.launch({
@@ -172,9 +172,11 @@ test.beforeAll(async () => {
   });
   window = await electronApp.firstWindow();
 
-  await window.getByLabel('Open Character View').click();
-
   const characterSelectButton = await window.getByRole('button', { name: 'Select Character'});
+
+  if(!(await characterSelectButton)) {
+    await window.getByLabel('Open Character View').click();  
+  }
   await expect(characterSelectButton).toBeVisible();
 
   characterSelectButton.click();
@@ -184,6 +186,10 @@ test.beforeAll(async () => {
 
   const title = await window.getByRole('heading', { level: 1});
   await expect(title).toHaveText(testNoteName);
+});
+
+test.afterAll(async () => {
+  await electronApp.close();
 });
 
 test('check Stats', async () => {
