@@ -110,12 +110,6 @@ export default class CharacterFile implements SectionedFile {
 
       if(character.description.editedText)fileString = writeBackSection(character.description, ['', fileString]).join('');
 
-      // Replace the description with the new one
-
-      // fileString = writeUnderHeading(
-      //   headingByName(this.sections, this.p.settings.descriptionHeading),
-      //   fileString,
-      //   character.description);
 
       // const personalityHeading = headingByName(this.sections, personalityHeadingOptions.title);
 
