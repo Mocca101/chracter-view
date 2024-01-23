@@ -15,7 +15,7 @@ const obsidianOpen = 'obsidian://open?';
 const obsidianCreate = 'obsidian://new?';
 const testNoteName = 'Kuini_base_spec';
 
-test.beforeAll(async () => {
+test.beforeEach(async () => {
   // replace all '#' in the kuiniString
   const content = kuiniString.replace(/#/g, '%23');
   let args: string[] = [''];
@@ -44,6 +44,10 @@ test.beforeAll(async () => {
 
   const title = await window.getByRole('heading', { level: 1});
   await expect(title).toHaveText(testNoteName);
+});
+
+test.afterEach(async () => {
+  await electronApp.close();
 });
 
 test('create new subheading', async () => {
