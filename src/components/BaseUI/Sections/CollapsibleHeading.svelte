@@ -30,11 +30,11 @@
             type: 'heading',
             level: heading.level + 1,
             text: '#'.repeat(heading.level + 1) + ' ' + newSubheadingTitle ?? 'New Subheading',
-            new: true,
+            isNew: true,
             subsections: [{
                 type: 'paragraph',
                 text: 'New Paragraph',
-                new: true,
+                isNew: true,
             }]
         }
         heading.subsections = [...heading.subsections, newSubheading];

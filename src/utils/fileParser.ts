@@ -10,7 +10,7 @@ export function parseFile(fileString: string) : Section[] {
 type BaseSection = {
     text: string;
     editedText?: string;
-    new?: boolean;
+    isNew?: boolean;
 }
 
 export type CodeSection = BaseSection & {
