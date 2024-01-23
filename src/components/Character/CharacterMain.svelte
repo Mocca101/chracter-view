@@ -18,7 +18,8 @@
   import type ObsidianCharacterView from "../../main";
   import { FilePlus, SaveIcon } from "lucide-svelte";
   import { parseFile } from "../../utils/fileParser";
-  import HeadingTextblock from "../BaseUI/Sections/CollapsibleHeading.svelte";
+  import CollapsibleHeading from "../BaseUI/Sections/CollapsibleHeading.svelte";
+  import PlainHeading from "../BaseUI/Sections/PlainHeading.svelte";
 
   let p: ObsidianCharacterView;
   mainStore.plugin.subscribe((plugin) => (p = plugin));
@@ -154,7 +155,8 @@
 
   {#if char.headings && char.headings.length > 0}
     {#each char.headings as heading, i}
-      <HeadingTextblock bind:heading={heading} />
+      <PlainHeading bind:heading={heading} />
+      <!-- <CollapsibleHeading bind:heading={heading} /> -->
       <button on:click={() => console.log(heading)}>Print Heading</button>
     {/each}
   {/if}

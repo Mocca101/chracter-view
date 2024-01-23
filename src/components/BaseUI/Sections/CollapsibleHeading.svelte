@@ -5,7 +5,7 @@
     import { ChevronDownIcon, ChevronUpIcon, Pen } from 'lucide-svelte'
     import BaseContainerRect from "../BaseContainerRect.svelte";
     import { onMount } from "svelte";
-  import AddSubheadingButton from './AddSubheadingButton.svelte';
+    import AddSubheadingButton from './AddSubheadingButton.svelte';
 
     export let heading: HeadingSection | undefined | null = undefined;
 
