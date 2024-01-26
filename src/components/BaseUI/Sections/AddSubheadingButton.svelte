@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {  type HeadingSection } from "../../../utils/file/fileSections";
+    import {  createHeading, type HeadingSection } from "../../../utils/file/fileSections";
     let heading: HeadingSection | undefined | null = undefined;
 
     let newSubheadingTitle = '';
@@ -10,17 +10,7 @@
 
     function addSubheading() {
         if (!heading) return;
-        const newSubheading: HeadingSection = {
-            type: 'heading',
-            level: heading.level + 1,
-            text: '#'.repeat(heading.level + 1) + ' ' + newSubheadingTitle ?? 'New Subheading',
-            isNew: true,
-            subsections: [{
-                type: 'paragraph',
-                text: 'New Paragraph',
-                isNew: true,
-            }]
-        }
+        const newSubheading: HeadingSection = createHeading(heading.level + 1, newSubheadingTitle ?? 'New Subheading');
         heading.subsections = [...heading.subsections, newSubheading];
         editNewSubheadingTitle = false;
     }
