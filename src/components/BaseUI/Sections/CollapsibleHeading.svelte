@@ -2,7 +2,7 @@
     import ParagraphEditor from './ParagraphEditor.svelte';
     import { Collapsible } from "bits-ui";
     import { type HeadingSection } from "../../../utils/fileParser";
-    import { ChevronDownIcon, ChevronUpIcon, Pen } from 'lucide-svelte'
+    import { ChevronDownIcon, ChevronUpIcon } from 'lucide-svelte'
     import BaseContainerRect from "../BaseContainerRect.svelte";
     import { onMount } from "svelte";
     import AddSubheadingButton from './AddSubheadingButton.svelte';
@@ -26,7 +26,7 @@
     </div>
 {:else}
     <Collapsible.Root bind:open={collapsibleOpen} >
-        <BaseContainerRect class="max-w-full {$$restProps.class ?? ''}">
+        <BaseContainerRect maxW="max-w-full" class="{$$restProps.class ?? ''}">
             <Collapsible.Trigger class="flex items-center justify-between w-full shadow-none border-b-[1px] border-solid rounded-none focus:shadow-md">
                 <span class="text-xl font-bold">{heading.text.slice(heading.level + 1)}</span>
                 {#if collapsibleOpen}
