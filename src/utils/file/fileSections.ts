@@ -23,13 +23,13 @@ export type ParagraphSection = BaseSection & {
 export type Section = CodeSection | YamlSection | HeadingSection | ParagraphSection;
 
 
-export function createHeading(level: number, text?: string, paragraphText?: string, subsections?: Section[]): HeadingSection {
+export function createHeading(level: number, text?: string, paragraphText?: string, newSubsections?: Section[]): HeadingSection {
     const heading: HeadingSection = {
         isNew: true,
         type: 'heading',
         text: '#'.repeat(level) + " " + (text || 'New Heading'),
         level,
-        subsections: [createParagraph(paragraphText), ...(subsections || [])],
+        subsections: [createParagraph(paragraphText), ...(newSubsections || [])],
     };
     return heading;
 }
