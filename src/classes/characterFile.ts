@@ -4,7 +4,7 @@ import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
 import type Character from "./character";
 import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
-import { firstParagraph, headingByName, allText } from "../utils/file/fileSections";
+import { firstParagraph, headingByName, allText, setToNonNew } from "../utils/file/fileSections";
 import { type CodeSection, type Section, type YamlSection, type HeadingSection, type ParagraphSection } from "../utils/file/fileSections";
 import { sectionHasChanged } from "../utils/file/fileSections";
 
@@ -81,7 +81,7 @@ export default class CharacterFile implements SectionedFile {
 
       if(sectionHasChanged(character.personality)) fileString = writeBackSection(character.personality, ['', fileString]).join('');
 
-       character.headings.forEach(heading => {
+      character.headings.forEach(heading => {
         fileString = writeBackSection(heading, ['', fileString]).join('');
       });
 
@@ -99,7 +99,10 @@ function appendNewSection(section: Section, text: string) : string {
 
   let addedText = section.text + '\n';
   if(section.editedText) addedText = section.editedText + '\n';
-  if(section.type === 'heading') addedText += allText(section.subsections);
+  if(section.type === 'heading') {
+    addedText += allText(section.subsections);
+    setToNonNew(section.subsections);
+  }
 
   text += '\n' + addedText + '\n';
 
