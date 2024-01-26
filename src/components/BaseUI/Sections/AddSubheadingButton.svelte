@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { type HeadingSection } from "../../../utils/fileParser";
-
-    export let heading: HeadingSection | undefined | null = undefined;
+    import {  type HeadingSection } from "../../../utils/file/fileSections";
+    let heading: HeadingSection | undefined | null = undefined;
 
     let newSubheadingTitle = '';
     let editNewSubheadingTitle = false;

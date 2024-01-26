@@ -8,20 +8,20 @@ import type Race from "../types/race";
 import { DnDBaseSkills } from "../data/BaseSkills";
 import type { HitDice } from "../types/diceCombo";
 import { getAC } from "../utils/armorHelper";
-import { type Armor, type ArmorType } from "../types/armorTypes";
-import type { Personality, personalityTrait } from "../types/personality";
+import { type Armor, } from "../types/armorTypes";
 import type { Sense, Senses } from "../types/senses";
 import type { Proficiencies } from "../types/proficiency";
 import type { Statblock } from "../types/zod/zodSchemas";
 import { abilityToStatblock, diceComboToString, diceStringToDiceCombo, sbProficenciesToProficiencies, statToStatblockStat } from "../utils/conversions";
 import { defaultDndStats } from "../data/baseStats";
-import type { HeadingSection, ParagraphSection } from "../utils/fileParser";
+import type { HeadingSection, ParagraphSection } from "../utils/file/fileSections";
+import { createHeading, createParagraph } from "../utils/file/fileSections";
 
-export default class Character implements Entity, Personality, Senses, Proficiencies {
+export default class Character implements Entity, Senses, Proficiencies {
 
 
   name: string = "Default Name";
-  description: ParagraphSection = { type: "paragraph", text: "Default Description" };
+  description: ParagraphSection = createParagraph("Default Description");
   alignment: string = "True Neutral";
   size: string = "Medium";
   race?: Race;
@@ -69,25 +69,16 @@ export default class Character implements Entity, Personality, Senses, Proficien
 
   // --- Personality ---
 
-  generalPersonality: string = "";
-  personalityTraits: personalityTrait[] = [
-    {
-      name: "Traits",
-      text: "",
-    },
-    {
-      name: "Ideals",
-      text: "",
-    },
-    {
-      name: "Bonds",
-      text: "",
-    },
-    {
-      name: "Flaws",
-      text: "",
-    },
-  ]
+  personality: HeadingSection = createHeading(
+    2, 
+    "Personality", 
+    "Default Personality", 
+    [
+      createHeading(3, "Traits", "Default Traits"),
+      createHeading(3, "Ideals", "Default Ideals"),
+      createHeading(3, "Bonds", "Default Bonds"),
+      createHeading(3, "Flaws", "Default Flaws"),
+    ]);
 
   // --- End of Personality ---
 

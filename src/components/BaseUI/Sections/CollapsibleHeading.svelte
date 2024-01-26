@@ -1,7 +1,8 @@
 <script lang="ts">
     import ParagraphEditor from './ParagraphEditor.svelte';
     import { Collapsible } from "bits-ui";
-    import { type HeadingSection } from "../../../utils/fileParser";
+    import { type HeadingSection } from "../../../utils/file/fileSections";
+
     import { ChevronDownIcon, ChevronUpIcon } from 'lucide-svelte'
     import BaseContainerRect from "../BaseContainerRect.svelte";
     import { onMount } from "svelte";

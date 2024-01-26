@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { focusEnd } from "../../../utils/actions";
-    import { type ParagraphSection } from "../../../utils/fileParser";
-
+    import { focusEnd } from "../../../utils/actions";
+    import { type ParagraphSection } from "../../../utils/file/fileSections";
     export let paragraph: ParagraphSection | undefined | null = undefined;
 
     function updateParagraph() {

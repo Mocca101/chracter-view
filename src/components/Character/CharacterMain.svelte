@@ -7,10 +7,9 @@
   import DeathSaves from "./DeathSaves.svelte";
   import Resistances from "./Resistances.svelte";
   import TempArmorSelect from "../Items/TempArmorSelect.svelte";
-  import PersonalityUI from "./PersonalityUI.svelte";
   import SensesUI from "./SensesUI.svelte";
   import ProficienciesUi from "./ProficienciesUI.svelte";
-  import { debounce, Notice, stringifyYaml, TFile } from "obsidian";
+  import { Notice, stringifyYaml, TFile } from "obsidian";
   import CharacterSelect from "./CharacterSelect.svelte";
   import CharacterFile from "../../classes/characterFile";
   import Character from "../../classes/character";
@@ -64,10 +63,9 @@
 
     assignFromStatblock(sectionedCharacterFile);
 
-    char.headings = [...char.headings, sectionedCharacterFile.personality]
-
-    char.generalPersonality = sectionedCharacterFile.generalPersonality;
-    char.personalityTraits = sectionedCharacterFile.personalityTraits;
+    char.headings = [...char.headings]
+    const personality = sectionedCharacterFile.personality;
+    if(personality) char.personality = sectionedCharacterFile.personality;
   }
 
   function assignFromStatblock(charcterfile: CharacterFile) {
@@ -192,7 +190,8 @@
 
       <Resistances bind:resistances={char.resistances} />
 
-      <PersonalityUI personality={char} />
+      
+      <PlainHeading bind:heading={char.personality} />
     </div>
   </div>
 

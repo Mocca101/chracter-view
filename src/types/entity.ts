@@ -4,7 +4,7 @@ import type Background from "./background";
 import type Race from "./race";
 import type Class from "./class";
 import type { HitDice } from "./diceCombo";
-import type { ParagraphSection } from "../utils/fileParser";
+import type { ParagraphSection } from "../utils/file/fileSections";
 
 export default interface Entity extends EntityStats, EntityBase {
 

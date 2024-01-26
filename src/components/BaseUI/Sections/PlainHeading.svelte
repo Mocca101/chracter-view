@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { type HeadingSection } from "../../../utils/fileParser";
+    import { type HeadingSection } from "../../../utils/file/fileSections";
     import BaseContainerRect from "../BaseContainerRect.svelte";
     import ParagraphEditor from "./ParagraphEditor.svelte"
 

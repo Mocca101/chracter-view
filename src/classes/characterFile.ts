@@ -4,8 +4,9 @@ import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
 import type Character from "./character";
 import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
-import { firstParagraph, headingByName, type CodeSection, type Section, type YamlSection, type HeadingSection, allText, type ParagraphSection } from "../utils/fileParser";
-import type { personalityTrait } from "../types/personality";
+import { firstParagraph, headingByName, allText } from "../utils/file/fileSections";
+import { type CodeSection, type Section, type YamlSection, type HeadingSection, type ParagraphSection } from "../utils/file/fileSections";
+import { sectionHasChanged } from "../utils/file/fileSections";
 
 
 const personalityHeadingOptions = {
@@ -50,38 +51,6 @@ export default class CharacterFile implements SectionedFile {
     return headingByName(this.sections, personalityHeadingOptions.title);
   }
 
-  get personalityTraits() {
-    const personalityHeading = headingByName(this.sections, personalityHeadingOptions.title);
-
-    if(!personalityHeading) return [];
-
-    const personalityTraits = personalityHeading.subsections.filter(section => section.type === 'heading' && section.level === personalityHeadingOptions.level + 1) as HeadingSection[];
-
-    return personalityTraits.map(trait => {
-      const traitParagraph = firstParagraph(trait);
-
-      if(!traitParagraph) return null;
-
-      return {
-        name: trait.text.slice(trait.level + 1).trim(),
-        text: traitParagraph.text.trim(),
-      }
-    }).filter(trait => trait !== null) as personalityTrait[];
-  }
-
-  get generalPersonality() : string {
-    const personalityHeading = headingByName(this.sections, personalityHeadingOptions.title);
-
-    if(!personalityHeading) return '';
-
-
-    const personalityParagraph =  firstParagraph(personalityHeading);
-
-    if(!personalityParagraph) return '';
-
-    return personalityParagraph.text.trim();
-  }
-
   /**
    * Returns the first statblock found in the file, if it exists.
    */
@@ -108,36 +77,11 @@ export default class CharacterFile implements SectionedFile {
       // Replace the statblock with the new one
       fileString = fileString.replace(statblockString, stringifyYaml(returnStatblock));
 
-      if(character.description.editedText)fileString = writeBackSection(character.description, ['', fileString]).join('');
+      if(sectionHasChanged(character.description))fileString = writeBackSection(character.description, ['', fileString]).join('');
 
+      if(sectionHasChanged(character.personality)) fileString = writeBackSection(character.personality, ['', fileString]).join('');
 
-      // const personalityHeading = headingByName(this.sections, personalityHeadingOptions.title);
-
-      // if(!personalityHeading) {
-      //   fileString += `\n\n${'#'.repeat(personalityHeadingOptions.level)} ${personalityHeadingOptions.title}\n\n`;
-      // } else {
-      //   fileString = writeUnderHeading(personalityHeading, fileString, character.generalPersonality);
-      // }
-
-      // character.personalityTraits.forEach(trait => {
-      //   console.log(trait);
-
-      //   const traitHeading = headingByName(this.sections, trait.name);
-
-      //   if(!traitHeading) {
-      //     fileString += `\n\n${'#'.repeat(personalityHeadingOptions.level + 1)} ${trait.name}\n\n ${trait.text}`;
-      //   }
-      //   else {
-      //     fileString = writeUnderHeading(traitHeading, fileString, trait.text);
-      //   }
-      // });
-
-
-      // TODO: Make sure the edited part of the headings gets the text assigned.
-      //  Idea: make a class of the heading section so that it can be editied with svelte
-      //  Idea: rewrite the component to somehow 'manually' update the properties of the heading section
-
-      character.headings.forEach(heading => {
+       character.headings.forEach(heading => {
         fileString = writeBackSection(heading, ['', fileString]).join('');
       });
 
