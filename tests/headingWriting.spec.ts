@@ -56,13 +56,13 @@ test.afterEach(async () => {
 test('create new subheading', async () => {
     const subheadingButton = await window.getByRole('button', { name: 'Add Subheading'});
     await expect(subheadingButton).toBeVisible();
-    subheadingButton.click();
+    await subheadingButton.click();
     const newSubheadingInput = await window.getByRole('textbox', { name: 'New Subheading'});
     await expect(newSubheadingInput).toBeVisible();
-    newSubheadingInput.fill(newSubheadingString);
-    const createButton = await window.getByRole('button', { name: 'Add', exact: true});
+    await newSubheadingInput.fill(newSubheadingString);
+    const createButton = window.getByRole('button', { name: 'Add', exact: true});
     await expect(createButton).toBeVisible();
-    createButton.click();
+    await createButton.click();
     const subheading = await window.getByRole('button', { name: newSubheadingString});
     await expect(subheading).toBeVisible();
     subheading.click();
