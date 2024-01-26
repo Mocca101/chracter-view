@@ -1,6 +1,7 @@
 <script lang="ts">
     import {  createHeading, type HeadingSection } from "../../../utils/file/fileSections";
-    let heading: HeadingSection | undefined | null = undefined;
+    
+    export let heading: HeadingSection | undefined | null;
 
     let newSubheadingTitle = '';
     let editNewSubheadingTitle = false;
