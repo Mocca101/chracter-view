@@ -4,7 +4,7 @@ import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
 import type Character from "./character";
 import mainStore from "../stores/mainStore";
 import type ObsidianCharacterView from "../main";
-import { firstParagraph, headingByName, allText, setToNonNew } from "../utils/file/fileSections";
+import { firstParagraph, headingByName, allText, setNotNew, setNotEdited } from "../utils/file/fileSections";
 import { type CodeSection, type Section, type YamlSection, type HeadingSection, type ParagraphSection } from "../utils/file/fileSections";
 import { sectionHasChanged } from "../utils/file/fileSections";
 
@@ -82,6 +82,7 @@ export default class CharacterFile implements SectionedFile {
       if(sectionHasChanged(character.personality)) fileString = writeBackSection(character.personality, ['', fileString]).join('');
 
       character.headings.forEach(heading => {
+        if(!sectionHasChanged(heading)) return;
         fileString = writeBackSection(heading, ['', fileString]).join('');
       });
 
@@ -101,7 +102,8 @@ function appendNewSection(section: Section, text: string) : string {
   if(section.editedText) addedText = section.editedText + '\n';
   if(section.type === 'heading') {
     addedText += allText(section.subsections);
-    setToNonNew(section.subsections);
+    setNotNew(section.subsections);
+    setNotEdited(section.subsections);
   }
 
   text += '\n' + addedText + '\n';
@@ -118,19 +120,20 @@ function appendNewSection(section: Section, text: string) : string {
  * @returns The updated split text after writing back the section.
  */
 function writeBackSection(section: Section, splitText: [string,string]) : [string, string] {
-  console.log('writing back section', section)
-
   let [textStart, textEnd] = splitText;
 
   if(section.isNew) {
     if(textStart) return [appendNewSection(section, textStart), textEnd];
     return ['', appendNewSection(section, textEnd)];
   }
-  
+
+  if(!textEnd) console.error(`No text end found for section ${section.text}`);
+
   let pre;
   [pre, textEnd] = splitOnFirst(textEnd, section.text);
   textStart += pre + (section.editedText ?? section.text);
 
+  section.editedText = null;
   if(section.type !== 'heading') return [textStart, textEnd];
 
   for(let i = 0; i < section.subsections.length; i++) {

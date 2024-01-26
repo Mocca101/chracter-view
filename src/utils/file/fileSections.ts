@@ -78,11 +78,20 @@ export function allText(sections: Section[]): string {
     return text;
 }
 
-export function setToNonNew(sections: Section[] ) {
+export function setNotNew(sections: Section[] ) {
     sections.forEach(section => {
         section.isNew = false;
         if (section.type === 'heading') {
-            setToNonNew(section.subsections);
+            setNotNew(section.subsections);
+        }
+    });
+}
+
+export function setNotEdited(sections: Section[]) {
+    sections.forEach(section => {
+        section.editedText = null;
+        if (section.type === 'heading') {
+            setNotEdited(section.subsections);
         }
     });
 }
