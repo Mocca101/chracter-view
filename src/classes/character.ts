@@ -174,7 +174,6 @@ export default class Character implements Entity, Senses, Proficiencies {
       deathSaveSuccesses: this.deathSaveSuccesses,
       deathSaveFailures: this.deathSaveFailures,
 
-      // TODO: speed
       stats: this.stats.map(stat => statToStatblockStat(stat)),
       skillProficiencies: this.skillProficiencies.map(ability => abilityToStatblock(ability)),
 
