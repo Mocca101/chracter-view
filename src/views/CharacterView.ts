@@ -47,10 +47,6 @@ export class CharacterView extends ItemView {
 		this.component.$destroy();
 	}
 
-	// TODO: Move the debounce to the component and call the components debounced function from here.
-	// TODO: In the component we can check if it's curretnly doing the debounce and display a loading symbol somewhere to show it's working/watching for changes.
-	debouncedUpdateFromCharacter = debounce((file: TFile) => this.component.fileUpdated(file), 2500);
-
 	private async onFileModified(file: TFile): Promise<void> {
 		// Get the index of the prop in the context via $$.props.[propName]
 		// Get the actual value from the context via $$.ctx.[propIndex]
@@ -58,7 +54,7 @@ export class CharacterView extends ItemView {
 		const activeCharacter = this.component.$$.ctx[this.component.$$.props.activeCharacter]
 
 		if (file.path === activeCharacter?.path) {
-			this.debouncedUpdateFromCharacter(file);
+			this.component.fileUpdated(file)
 		}
 
 	}
