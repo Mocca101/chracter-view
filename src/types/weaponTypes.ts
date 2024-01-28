@@ -7,8 +7,6 @@ export const weaponCategories = [
   "special",
 ] as const;
 
-export type WeaponCategory = typeof weaponCategories[number];
-
 const weaponProperties = [
   "ammunition",
   "finesse",
@@ -23,4 +21,3 @@ const weaponProperties = [
   "versatile",
 ] as const;
 
-export type WeaponProperty = typeof weaponProperties[number];

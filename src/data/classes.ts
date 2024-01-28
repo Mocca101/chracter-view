@@ -1,7 +1,6 @@
 import type { Armor } from "../types/armorTypes";
 import type { BaseCheck } from "../types/check";
 import type { Stat } from "../types/stats";
-import type { WeaponCategory } from "../types/weaponTypes";
 import { Strength, Dexterity, Constitution, Intelligence, Wisdom, Charisma } from "./baseStats";
 
 export interface Class {
@@ -10,7 +9,7 @@ export interface Class {
   savingThrows: Stat[];
   skillProficiencies: BaseCheck[];
   armorProficiencies: Armor[];
-  weaponProficiencies: WeaponCategory[];
+  weaponProficiencies: string[];
   
   equipment: string[];
   features: string[];
