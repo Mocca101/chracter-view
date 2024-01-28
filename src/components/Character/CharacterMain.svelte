@@ -19,6 +19,7 @@
   import { parseFile } from "../../utils/file/fileParser";
   import CollapsibleHeading from "../BaseUI/Sections/CollapsibleHeading.svelte";
   import PlainHeading from "../BaseUI/Sections/PlainHeading.svelte";
+  import { allText } from "../../utils/file/fileSections";
 
   let p: ObsidianCharacterView;
   mainStore.plugin.subscribe((plugin) => (p = plugin));
@@ -114,7 +115,7 @@
       "\n```statblock\n" + stringifyYaml(char.statblock) + "```\n"
     );
 
-    content = content.replace("{{description}}", (char.description.editedText ?? char.description.text));
+    content = content.replace("{{description}}", allText([char.description]));
 
     if (await p.app.vault.adapter.exists(newPath)) {
       new Notice(

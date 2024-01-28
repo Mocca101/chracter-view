@@ -14,14 +14,14 @@ import type { Proficiencies } from "../types/proficiency";
 import type { Statblock } from "../types/zod/zodSchemas";
 import { abilityToStatblock, diceComboToString, diceStringToDiceCombo, sbProficenciesToProficiencies, statToStatblockStat } from "../utils/conversions";
 import { defaultDndStats } from "../data/baseStats";
-import type { HeadingSection, ParagraphSection } from "../utils/file/fileSections";
-import { createHeading, createParagraph } from "../utils/file/fileSections";
+import type { HeadingSection } from "../utils/file/fileSections";
+import { createHeading } from "../utils/file/fileSections";
 
 export default class Character implements Entity, Senses, Proficiencies {
 
 
   name: string = "Default Name";
-  description: ParagraphSection = createParagraph("Default Description");
+  description: HeadingSection = createHeading(2, "Description", "Default Description");
   alignment: string = "True Neutral";
   size: string = "Medium";
   race?: Race;
@@ -117,7 +117,7 @@ export default class Character implements Entity, Senses, Proficiencies {
 
   // --- End of Proficiencies ---
 
-  constructor(name?: string, description?: ParagraphSection, stats?: Stat[], speed?: string[], hitPoints?: HitPoints) {
+  constructor(name?: string, description?: HeadingSection, stats?: Stat[], speed?: string[], hitPoints?: HitPoints) {
     if(name) this.name = name;
     if(description) this.description = description;
     if(speed)this.speed = speed ?? ["30"];

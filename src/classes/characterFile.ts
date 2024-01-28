@@ -30,23 +30,13 @@ export default class CharacterFile {
     return this.sections.find(section => section.type === 'yaml') as YamlSection | null;;
   }
 
-  get description() : ParagraphSection {
+  get description() : HeadingSection {
     if(this.sections.length < 1) return null;
-
-    const descriptionHeading = headingByName(this.sections, this.p.settings.descriptionHeading);
-
-    if(!descriptionHeading) return null;
-
-    const descriptionParagraph = firstParagraph(descriptionHeading);
-
-    if(!descriptionParagraph || !descriptionHeading.text) return null;
-
-    return firstParagraph(descriptionHeading);
+    return headingByName(this.sections, this.p.settings.descriptionHeading);
   }
 
-  get personality() : HeadingSection | null | undefined {
+  get personality() : HeadingSection {
     if(this.sections.length < 1) return null;
-
     return headingByName(this.sections, personalityHeadingOptions.title);
   }
 

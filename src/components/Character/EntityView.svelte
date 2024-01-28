@@ -8,8 +8,8 @@
   import type Character from "../../classes/character";
   import BaseContainerRect from "../BaseUI/BaseContainerRect.svelte";
   import ArrayTextField from "../BaseUI/ArrayTextField.svelte";
-  import ParagraphEditor from "../BaseUI/Sections/ParagraphEditor.svelte";
   import { focusEnd } from "../../utils/actions";
+  import PlainHeading from "../BaseUI/Sections/PlainHeading.svelte";
 
   export let entity: Character;
 </script>
@@ -26,8 +26,8 @@
         {entity.name}
       </h1>
       <p>Level: <TextNumberInput bind:value={entity.cr} /></p>
-      <ParagraphEditor
-        bind:paragraph={entity.description}
+      <PlainHeading
+        bind:heading={entity.description}
       />
     </div>
 
