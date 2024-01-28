@@ -31,3 +31,4 @@ styles.css
 *.sln
 *.sw?
 .env
+data.json
