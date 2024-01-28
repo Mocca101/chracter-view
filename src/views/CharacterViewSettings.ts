@@ -1,4 +1,4 @@
-import { PluginSettingTab, Setting, debounce } from "obsidian";
+import { PluginSettingTab, Setting, debounce, getAllTags } from "obsidian";
 import type ObsidianCharacterView from "../main";
 import { SuggestionDropdown } from "../components/BaseUI/Suggests/SuggestDropdown";
 
@@ -23,6 +23,23 @@ export default class CharacterViewSettings extends PluginSettingTab {
         this.setupDescriptionHeadingSetting(sectionParent);
 
         this.setupTemplatePathSetting(sectionParent);
+
+        this.setupCharTagSetting(sectionParent);
+
+        this.setupDebugModeSetting(sectionParent);
+    }
+
+    private setupDebugModeSetting(sectionParent: HTMLDivElement) {
+        const debugToggle = new Setting(sectionParent);
+        debugToggle.setName("Debug Mode");
+        debugToggle.setDesc("Toggle Debug Mode");
+        debugToggle.addToggle(toggle => {
+            toggle.setValue(this.plugin.settings.debugMode);
+            toggle.onChange(async (value) => {
+                this.plugin.settings.debugMode = value;
+                await this.plugin.saveSettings();
+            });
+        });
     }
 
     setupDescriptionHeadingSetting(container: HTMLElement) {
@@ -72,7 +89,42 @@ export default class CharacterViewSettings extends PluginSettingTab {
                 }
             );
         });
+    }
 
+    debouncedSetAvailableTags = debounce(() => {
+        this.availableTags = 
+            Object.keys(this.app.metadataCache.getTags())
+    }, 1000);
+
+    availableTags: string[] = [];
+
+    setupCharTagSetting(container: HTMLElement) {
+        const settingCharTag = new Setting(container)
+        
+        settingCharTag.setName("Character Tag");
+        settingCharTag.setDesc("The tag that identifies a character file.");
+        settingCharTag.addText(text => {
+            text.setPlaceholder("Character Tag");
+            text.setValue(this.plugin.settings.characterTag);
+            text.onChange(async (value) => {
+                this.plugin.settings.characterTag = value;
+                await this.plugin.saveSettings();
+            });
+            text.inputEl.onClickEvent(() => this.debouncedSetAvailableTags())
+
+            new SuggestionDropdown(
+                text.inputEl, 
+                () => {
+                    this.debouncedSetAvailableTags();
+                    return this.availableTags;
+                 }, 
+                async (submission) => {
+                    text.setValue(submission);
+                    this.plugin.settings.characterTag = submission;
+                    await this.plugin.saveSettings();
+                }
+            );
+        });
     }
     
 
