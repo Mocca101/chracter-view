@@ -16,7 +16,7 @@
   import mainStore from "../../stores/mainStore";
   import type ObsidianCharacterView from "../../main";
   import { FilePlus, SaveIcon } from "lucide-svelte";
-  import { parseFile } from "../../utils/fileParser";
+  import { parseFile } from "../../utils/file/fileParser";
   import CollapsibleHeading from "../BaseUI/Sections/CollapsibleHeading.svelte";
   import PlainHeading from "../BaseUI/Sections/PlainHeading.svelte";
 
