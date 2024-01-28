@@ -1,8 +1,5 @@
-import type { Tool } from "../data/tools";
-import type { ArmorType } from "./armorTypes";
 import type {BaseCheck } from "./check";
 import type { ProficiencyState } from "./enums";
-import type { WeaponCategory } from "./weaponTypes";
 
 // IDEA:
 // SkillProficiency {
