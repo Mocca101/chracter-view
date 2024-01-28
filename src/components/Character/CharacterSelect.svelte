@@ -13,7 +13,7 @@
 
   export let activeCharacter: TFile = null;
 
-  const characterSelectModal = new FuzzyFileModal(app);
+  const characterSelectModal = new FuzzyFileModal(p.app);
   characterSelectModal.getItems = () =>
     p.app.vault.getMarkdownFiles().filter((file) => {
       const fileCache = p.app.metadataCache.getFileCache(file);
