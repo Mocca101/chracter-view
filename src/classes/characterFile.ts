@@ -1,5 +1,4 @@
 import { parseYaml, stringifyYaml, TFile } from "obsidian";
-import type { SectionedFile,  } from "../utils/file";
 import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
 import type Character from "./character";
 import mainStore from "../stores/mainStore";
@@ -14,7 +13,7 @@ const personalityHeadingOptions = {
   level: 2,
 }
 
-export default class CharacterFile implements SectionedFile {
+export default class CharacterFile {
   p: ObsidianCharacterView;
 
   baseFile: TFile;
