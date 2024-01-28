@@ -1,6 +1,4 @@
-import { parseYaml } from "obsidian";
-import { zStatblock, type Statblock } from "../types/zod/zodSchemas";
-import type { Section, YamlSection, HeadingSection } from "./file/fileSections";
+import type { Section, YamlSection, HeadingSection } from "./fileSections";
 
 
 export function parseFile(fileString: string) : Section[] {
