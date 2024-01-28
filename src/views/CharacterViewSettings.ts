@@ -93,6 +93,7 @@ export default class CharacterViewSettings extends PluginSettingTab {
 
     debouncedSetAvailableTags = debounce(() => {
         this.availableTags = 
+            // @ts-ignore - getTags() is not in the typings, it is unofficial and might break
             Object.keys(this.app.metadataCache.getTags())
     }, 1000);
 
