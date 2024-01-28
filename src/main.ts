@@ -3,6 +3,7 @@ import { Plugin } from "obsidian";
 import mainStore from "./stores/mainStore";
 import { CharacterView, VIEW_TYPE_CHARACTER } from "./views/CharacterView";
 import { initUtils } from "./utils/util";
+import CharacterViewSettings from "./views/CharacterViewSettings";
 
 interface ObsidianCharacterViewSettings {
 	characterTag: string;
@@ -14,7 +15,7 @@ interface ObsidianCharacterViewSettings {
 const DEFAULT_SETTINGS: ObsidianCharacterViewSettings = {
 	characterTag: "#dnd-character",
 	characterTemplatePath: "templates/char_template.md",
-	descriptionHeading: "description",
+	descriptionHeading: "Description",
 	debugMode: false
 };
 
@@ -37,6 +38,8 @@ export default class ObsidianCharacterView extends Plugin {
 	async onload() {
 		initUtils(this.app);
 		await this.loadSettings();
+
+		this.addSettingTab(new CharacterViewSettings(this.app, this));
 
 		// @ts-ignore "plugin" doesn't exist
 		this.diceRollerPlugin = this.app.plugins.getPlugin("obsidian-dice-roller");
