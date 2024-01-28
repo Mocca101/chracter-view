@@ -65,8 +65,10 @@ export default class CharacterViewSettings extends PluginSettingTab {
                     this.debouncedSetMarkdownFiles();
                     return this.markdownFilePaths;
                  }, 
-                (submission) => {
+                async (submission) => {
                     text.setValue(submission);
+                    this.plugin.settings.characterTemplatePath = submission;
+                    await this.plugin.saveSettings();
                 }
             );
         });
