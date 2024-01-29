@@ -87,14 +87,15 @@ test('create new subheading', async () => {
 });
 
 test('edit Paragraph', async () => {
-  const subheading = await window.getByRole('button', { name: 'Personality Toggle', exact: true });
+  
+  const subheading = await window.getByRole('heading', { name: 'Personality', exact: true })
   await expect(subheading).toBeVisible();
 
   const subheadingParent = await subheading.locator('..');
 
-  await expect(subheadingParent.getByText(defaultPersonalityParagraph)).toBeVisible();
-  await expect(subheadingParent.getByText(defaultPersonalityParagraph)).toHaveAttribute('aria-label', 'Edit');
-  await subheadingParent.getByText(defaultPersonalityParagraph).click();
+  await expect(subheadingParent.getByText(defaultPersonalityParagraph, {exact: true})).toBeVisible();
+  await expect(subheadingParent.getByText(defaultPersonalityParagraph, {exact: true})).toHaveAttribute('aria-label', 'Edit');
+  await subheadingParent.getByText(defaultPersonalityParagraph, {exact: true}).click();
 
   const paragraphInput = await subheadingParent.getByTestId('editable-paragraph');
   await expect(paragraphInput).toBeVisible();
