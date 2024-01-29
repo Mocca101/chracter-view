@@ -16,7 +16,7 @@ import { abilityToStatblock, diceComboToString, diceStringToDiceCombo, sbProfice
 import { defaultDndStats } from "../data/baseStats";
 import type { HeadingSection } from "../utils/file/fileSections";
 import { createHeading } from "../utils/file/fileSections";
-import { commaStringToArray } from "../utils/util";
+import { commaStringToArray, commaStringToReducedArray } from "../utils/util";
 
 export default class Character implements Entity, Senses, Proficiencies {
 
@@ -221,24 +221,9 @@ export default class Character implements Entity, Senses, Proficiencies {
     if (statblock.otherProficiencies) {
       this.otherProficiencies = commaStringToArray(statblock.otherProficiencies);
     }
-    this.armorProficiencies = statblock.armorProficiencies?.split(",")?.reduce((filtered: string[], value) => {
-      const val = value.trim();
-      if(val.length > 1) filtered.push(val);
-      return filtered;
-    }, []
-      ) ?? [];
-    this.weaponProficiencies = statblock.weaponProficiencies?.split(",")?.reduce((filtered: string[], value) => {
-      const val = value.trim();
-      if(val.length > 1) filtered.push(val);
-      return filtered;
-    }, [])
-    ?? [];
-    this.toolProficiencies = statblock.toolProficiencies?.split(",")?.reduce((filtered: string[], value) => {
-      const val = value.trim();
-      if(val.length > 1) filtered.push(val);
-      return filtered;
-    }, [])
-    ?? [];
+    this.armorProficiencies = commaStringToReducedArray(statblock.armorProficiencies ?? '');
+    this.weaponProficiencies = commaStringToReducedArray(statblock.weaponProficiencies ?? '');
+    this.toolProficiencies = commaStringToReducedArray(statblock.toolProficiencies ?? '');
 
     if (statblock.senses) {
       this.additionalSenses = commaStringToArray(statblock.senses);

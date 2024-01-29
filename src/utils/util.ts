@@ -34,3 +34,11 @@ export function commaStringToArray(str: string): string[] {
   return str.split(',').map(item => item.trim());
 }
 
+export function commaStringToReducedArray(str: string): string[] {
+  return str.split(',').reduce((filtered: string[], value) => {
+    const val = value.trim();
+    if(val.length > 0) filtered.push(val);
+    return filtered;
+  }, []);
+}
+
