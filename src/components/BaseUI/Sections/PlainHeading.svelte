@@ -13,7 +13,7 @@
         <h1 class="text-2xl font-bold">No Heading Provided</h1>
     </div>
 {:else}
-    <BaseContainerRect titleAtTop={true} maxW="max-w-full" title={title}>
+    <BaseContainerRect titleElement={'h'+heading.level} titleAtTop={true} maxW="max-w-full" title={title}>
         {#each heading.subsections as section}
             {#if section.type === 'paragraph'}
                 <ParagraphEditor  bind:paragraph={section} />
