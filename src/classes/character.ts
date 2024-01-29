@@ -16,7 +16,7 @@ import { abilityToStatblock, diceComboToString, diceStringToDiceCombo, sbProfice
 import { defaultDndStats } from "../data/baseStats";
 import type { HeadingSection } from "../utils/file/fileSections";
 import { createHeading } from "../utils/file/fileSections";
-import { arrFromCommaString as commaStringToArray } from "../utils/util";
+import { commaStringToArray } from "../utils/util";
 
 export default class Character implements Entity, Senses, Proficiencies {
 

@@ -30,6 +30,7 @@ export function statblockFromString(fileString: string): string {
   return fileString.slice(statblockStart + startString.length, statblockEnd);
 }
 
-export function arrFromCommaString(str: string): string[] {
+export function commaStringToArray(str: string): string[] {
   return str.split(',').map(item => item.trim());
 }
+
