@@ -1,17 +1,16 @@
 import type {BaseCheck } from "./check";
-import type { ProficiencyState } from "./enums";
 
 // IDEA:
 // SkillProficiency {
 //   skill: string;
 //   baseStatName: string;
-//   proficiencyState: ProficiencyState;
+//   proficiencyState: number;
 //   dice?: DiceCombo;
 // }
 
 export type SkillProficiency = {
   check: BaseCheck;
-  proficiencyState: ProficiencyState;
+  proficiencyState: number;
 }
 
 export type Proficiencies = {

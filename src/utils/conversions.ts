@@ -1,7 +1,6 @@
 import { DnDBaseSkills } from "../data/BaseSkills";
 import type { Check } from "../types/check";
 import type DiceCombo from "../types/diceCombo";
-import { ProficiencyState } from "../types/enums";
 import type { SkillProficiency } from "../types/proficiency";
 import type { Stat } from "../types/stats";
 
@@ -13,7 +12,7 @@ export function statToStatblockStat(stat: Stat) {
 
 export function abilityToStatblock(check: Check) {
   return {
-    [check.name]: ProficiencyState[check.proficiency]
+    [check.name]: check.proficiency
   }
 }
 
@@ -76,17 +75,17 @@ export function sbProficenciesToProficiencies(statblockProficiencies: Array<Reco
   return proficiencies;
 }
 
-function statblockProficiencyToProficiencyState(proficiency: string|number): ProficiencyState {
-  if(typeof proficiency !== 'number' && typeof proficiency!=='string') return ProficiencyState.NONE;
+function statblockProficiencyToProficiencyState(proficiency: string|number): number {
+  if(typeof proficiency !== 'number' && typeof proficiency!=='string') return 0;
 
   if(typeof proficiency === 'number') {
     switch (proficiency) {
-      case 1: return ProficiencyState.PROFICIENT;
-      case 2: return ProficiencyState.EXPERTISE;
+      case 1: return 1;
+      case 2: return 2;
     }
   } else {
-    if('proficient'.contains(proficiency.toLowerCase())) return ProficiencyState.PROFICIENT;
-    if('expertise'.contains(proficiency.toLowerCase())) return ProficiencyState.EXPERTISE;
+    if('proficient'.contains(proficiency.toLowerCase())) return 1;
+    if('expertise'.contains(proficiency.toLowerCase())) return 2;
   }
-  return ProficiencyState.NONE;
+  return 0;
 }

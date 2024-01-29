@@ -2,7 +2,6 @@
 import type ModifierCalc from "./modifier";
 import { type Stat } from "./stats";
 import type { RollMode } from "./types";
-import type { ProficiencyState } from "./enums";
 import { dndModifierCalc } from "../data/ModifierFunctions";
 import type DiceCombo from "./diceCombo";
 
@@ -26,7 +25,7 @@ export const dndDefaultCheck: {
 
 export type Modifiers = {
   stat: Stat;
-  proficiency?: ProficiencyState;
+  proficiency?: number;
   roleMode?: RollMode;
   additionalBoni?: number[];
 }

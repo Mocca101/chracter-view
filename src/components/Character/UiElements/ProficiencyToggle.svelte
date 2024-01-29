@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { ProficiencyState } from "../../../types/enums";
 
-  export let proficiency: ProficiencyState = ProficiencyState.NONE;
+  export let proficiency: number = 0;
   export let name: string;
 
   function toggleProficiency() {
@@ -10,10 +9,10 @@
 
   $: ariaToggleState = getAriaToggleState(proficiency);
 
-  function getAriaToggleState(p: ProficiencyState): "true" | "mixed" | "false" {
-    return p === ProficiencyState.EXPERTISE
+  function getAriaToggleState(p: number): "true" | "mixed" | "false" {
+    return p === 2
       ? "true"
-      : p === ProficiencyState.PROFICIENT
+      : p === 1
       ? "mixed"
       : "false";
   }
@@ -43,13 +42,13 @@
     w-4 h-4 rounded-full bg-[var(--background-primary)]
     relative top-[2px] left-[2px]"
   >
-    {#if proficiency === ProficiencyState.PROFICIENT || proficiency === ProficiencyState.EXPERTISE}
+    {#if proficiency === 1 || proficiency === 2}
       <div
         class="
           w-3 h-3 rounded-full bg-[var(--text-normal)]
           relative top-[2px] left-[2px]"
       >
-        {#if proficiency === ProficiencyState.EXPERTISE}
+        {#if proficiency === 2}
           <div
             class="
             w-1 h-1 rounded-full bg-[var(--background-primary)]
