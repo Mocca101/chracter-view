@@ -16,6 +16,7 @@ import { abilityToStatblock, diceComboToString, diceStringToDiceCombo, sbProfice
 import { defaultDndStats } from "../data/baseStats";
 import type { HeadingSection } from "../utils/file/fileSections";
 import { createHeading } from "../utils/file/fileSections";
+import { arrFromCommaString as commaStringToArray } from "../utils/util";
 
 export default class Character implements Entity, Senses, Proficiencies {
 
@@ -215,14 +216,10 @@ export default class Character implements Entity, Senses, Proficiencies {
 
 
     if (statblock.languages) {
-      this.languages = statblock.languages
-        .split(",")
-        .map((language) => language.trim());
+      this.languages = commaStringToArray(statblock.languages);
     }
     if (statblock.otherProficiencies) {
-      this.otherProficiencies = statblock.otherProficiencies
-        .split(",")
-        .map((proficiency) => proficiency.trim());
+      this.otherProficiencies = commaStringToArray(statblock.otherProficiencies);
     }
     this.armorProficiencies = statblock.armorProficiencies?.split(",")?.reduce((filtered: string[], value) => {
       const val = value.trim();
@@ -244,9 +241,7 @@ export default class Character implements Entity, Senses, Proficiencies {
     ?? [];
 
     if (statblock.senses) {
-      this.additionalSenses = statblock.senses
-        .split(",")
-        .map((sense) => sense.trim());
+      this.additionalSenses = commaStringToArray(statblock.senses);
     }
 
     if (statblock.abilitySafeDCs) {
@@ -256,9 +251,7 @@ export default class Character implements Entity, Senses, Proficiencies {
     }
 
     if (statblock.resistances) {
-      this.resistances = statblock.resistances
-        .split(",")
-        .map((resistance) => resistance.trim());
+      this.resistances = commaStringToArray(statblock.resistances);
     }
   }
 
