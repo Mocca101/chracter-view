@@ -46,7 +46,7 @@ export const addDice = (element: HTMLElement, diceOptions: DiceOptions) => {
   diceButton.addClasses(['clickable-icon','inline-block']);
   
   setIcon(diceButton, 'dices');
-  diceButton.createEl('span', {text: diceOptions.label}).addClass('sr-only')
+  diceButton.createEl('span', {text: diceOptions.label ?? 'Roll dice'}).addClass('sr-only')
 
   diceButton.onClickEvent(async () => {
     if(!diceRoller) return;
