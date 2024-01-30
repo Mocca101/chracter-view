@@ -19,11 +19,7 @@ test('parse a base check', () => {
     expect(check).toEqual({
         "Test Check": {
             stat: "strength",
-            dice: {
-                diceType: 20,
-                quantity: 1,
-                modifier: undefined,
-            },
+            dice: "1d20",
             proficiencyState: 0,
         }
     });
