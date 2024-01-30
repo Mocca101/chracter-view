@@ -13,6 +13,9 @@ const setOutDir = (mode: string) => {
 
 export default defineConfig(({ mode }) => {
 	return {
+		test: {
+			include: ["tests/unit/**/*"]
+		},
 		plugins: [svelte({ preprocess: vitePreprocess() })],
 		build: {
 			lib: {
