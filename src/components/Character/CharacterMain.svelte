@@ -186,6 +186,7 @@
     <div class="flex flex-col gap-1 text-center">
       {#each char.skillProficiencies as skill, i}
         <SkillComponent
+          modifierCalculation={char.modifierCalculation}
           bind:check={skill}
           bind:proficiencyBonus={char.proficiencyBonus}
         />

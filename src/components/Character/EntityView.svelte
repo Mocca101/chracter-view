@@ -70,7 +70,7 @@
   </div>
   <div class=" flex flex-wrap gap-1 max-w-xs min-w-[212px]">
     {#each entity.stats as stat, i}
-      <Stat bind:stat />
+      <Stat modifier={entity.modifierCalculation} bind:stat />
     {/each}
   </div>
 </div>

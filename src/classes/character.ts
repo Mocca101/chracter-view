@@ -17,9 +17,12 @@ import { defaultDndStats } from "../data/baseStats";
 import type { HeadingSection } from "../utils/file/fileSections";
 import { createHeading } from "../utils/file/fileSections";
 import { commaStringToArray, commaStringToReducedArray } from "../utils/util";
+import type {ModifierCalc} from "../types/modifier";
+import { dndModifierCalc } from "../data/ModifierFunctions";
 
 export default class Character implements Entity, Senses, Proficiencies {
 
+  modifierCalculation: ModifierCalc = dndModifierCalc;
 
   name: string = "Default Name";
   description: HeadingSection = createHeading(2, "Description", "Default Description");
@@ -138,12 +141,12 @@ export default class Character implements Entity, Senses, Proficiencies {
   }
 
   get initiative() : number {
-    return this.stats.find(stat => stat.name === "Dexterity").modifier() ?? 0;
+    return this.modifierCalculation(this.stats.find(stat => stat.name === "Dexterity")) ?? 0;
   }
 
   get ArmorClass() : number {
     const dex = this.stats.find(stat => stat.name === "Dexterity");
-    return getAC(dex, this.armor) ?? 0;
+    return getAC(dex, this.modifierCalculation, this.armor) ?? 0;
   }
 
   get proficiencyBonus() : number {

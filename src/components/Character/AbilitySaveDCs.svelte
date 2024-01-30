@@ -8,7 +8,7 @@
   export let character: Character;
 
   $: getDC = (abilityDC: Stat) => {
-    return baseValue + character.proficiencyBonus + abilityDC.modifier();
+    return baseValue + character.proficiencyBonus + character.modifierCalculation(abilityDC);
   };
 
   function addDC() {
@@ -25,8 +25,8 @@
     <button on:click={addDC}>Add Ability Save DC</button>
   {/if}
   {#each character.abilityDCs as abilityDC, index}
-    <div class="flex gap-1 items-center">
-      <BaseContainerRect class="flex gap-1 items-center">
+    <div class="flex items-center gap-1">
+      <BaseContainerRect class="flex items-center gap-1">
         <span>Ability Save DC: </span>
         <span>{getDC(abilityDC)}</span>
         <span>

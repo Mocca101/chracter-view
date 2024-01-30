@@ -10,7 +10,7 @@
 <BaseContainerRect class="flex flex-col gap-1" title="Senses">
   {#each character.keySenses as sense, i}
     <SenseUi
-      statValue={10 + sense.base.stat.modifier() + character.proficiencyBonus}
+      statValue={10 + character.modifierCalculation(sense.base.stat) + character.proficiencyBonus}
       senseText={sense.name}
     />
   {/each}

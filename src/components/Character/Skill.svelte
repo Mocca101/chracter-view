@@ -3,18 +3,22 @@
   import type { Check } from "../../types/check";
   import { tooltip } from "../../utils/tooltip";
   import { addDice } from "../../utils/actions";
+  import type {ModifierCalc} from "../../types/modifier";
 
   export let check: Check;
   export let proficiencyBonus: number;
+  export let modifierCalculation: ModifierCalc;
 
   $: proficency = (): number => {
     if (!check.proficiency || !proficiencyBonus) return 0;
     return check.proficiency * proficiencyBonus;
   };
 
-  $: modifier = check.stat.modifier() + proficency();
+  $: statModifier = check.stat ? modifierCalculation(check.stat) : 0;
 
-  $: modifierComponents = `Stat: ${check.stat.modifier()}
+  $: modifier = statModifier + proficency();
+
+  $: modifierComponents = `Stat: ${statModifier}
     ${
       proficency() > 0
         ? `+ Proficiency: ${proficiencyBonus} * ${check.proficiency}`

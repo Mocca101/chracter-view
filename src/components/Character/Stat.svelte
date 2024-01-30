@@ -3,7 +3,9 @@
   import BaseContainerRound from "../BaseUI/BaseContainerRound.svelte";
   import type { Stat } from "../../types/stats";
   import ModifierField from "../BaseUI/ModifierField.svelte";
+  import type { ModifierCalc } from "../../types/modifier";
 
+  export let modifier: ModifierCalc;
   export let stat: Stat;
 </script>
 
@@ -13,7 +15,7 @@
   <p class="my-0">{stat.name.substring(0, 3)}</p>
   <ModifierField
     class="my-0"
-    value={stat.modifier()}
+    value={modifier(stat)}
     modifierSource={stat.name}
   />
 </BaseContainerRound>

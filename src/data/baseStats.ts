@@ -1,12 +1,10 @@
 import type { Stat } from "../types/stats";
-import { dndModifierCalc } from "./ModifierFunctions";
 
 export const Strength: Stat = {
   name: "Strength",
   max: 20,
   value: 10,
   min: 1,
-  modifier: dndModifierCalc,
 };
 
 export const Dexterity: Stat = {
@@ -14,7 +12,6 @@ export const Dexterity: Stat = {
   max: 20,
   value: 10,
   min: 1,
-  modifier: dndModifierCalc,
 };
 
 export const Constitution: Stat = {
@@ -22,7 +19,6 @@ export const Constitution: Stat = {
   max: 20,
   value: 10,
   min: 1,
-  modifier: dndModifierCalc,
 };
 
 export const Intelligence: Stat = {
@@ -30,7 +26,6 @@ export const Intelligence: Stat = {
   max: 20,
   value: 10,
   min: 1,
-  modifier: dndModifierCalc,
 };
 
 export const Wisdom: Stat = {
@@ -38,7 +33,6 @@ export const Wisdom: Stat = {
   max: 20,
   value: 10,
   min: 1,
-  modifier: dndModifierCalc,
 };
 
 export const Charisma: Stat = {
@@ -46,7 +40,6 @@ export const Charisma: Stat = {
   max: 20,
   value: 10,
   min: 1,
-  modifier: dndModifierCalc,
 };
 
 export const defaultDndStats = () =>{ return [
