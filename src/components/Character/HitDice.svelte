@@ -44,7 +44,9 @@
       label: "Roll selected number of hit die",
     }}
   >
+    <label for="hit-dice-to-use" class="sr-only ">Hit dice to use</label>
     <input
+      name="hit-dice-to-use"
       min={1}
       max={hitDice.max}
       type="number"
