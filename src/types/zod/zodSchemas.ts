@@ -2,6 +2,52 @@ import { z } from "zod";
 
 export const zSkillProficiency = z.record(z.string(), z.string().or(z.number()));
 
+const zDiceCombo = z.object({
+  diceType: z.number(),
+  quantity: z.number(),
+  modifier: z.number().optional(),
+})
+
+type DiceCombo = z.infer<typeof zDiceCombo>;
+
+const diceComboInString = z.string().transform((str, ctx) => {
+  const [quantity, diceType, modifier] = str.split(/[-+d]/).map(item => parseInt(item.trim()));
+
+  if(!quantity || !diceType) {
+    ctx.addIssue(
+      {
+        code: z.ZodIssueCode.custom,
+        message: 'Invalid dice combo, quantity or diceType is missing or not a number.',
+      }
+    )
+    return z.never();
+  }
+
+  return {
+    diceType: diceType,
+    quantity: quantity,
+    modifier: modifier ? modifier : undefined,
+  } as DiceCombo;
+
+})
+
+
+/** 
+ * Structure:
+ * name: {
+ *  stat,
+ *  proficiencyState,
+ *  dice, 
+ * }
+*/
+export const zBaseCheck = z.record(z.string(), z.object({
+  stat: z.string(),
+  proficiencyState: z.number().default(0),
+  dice: diceComboInString,
+}))
+
+
+
 export const zStatblock = z.object({
   name: z.string().optional(),
   alignment: z.string().optional(),

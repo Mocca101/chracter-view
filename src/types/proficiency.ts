@@ -1,6 +1,6 @@
 import type {BaseCheck } from "./check";
 
-// IDEA:
+// TODO: IDEA: -> Actually I think having the base stat as type is good, but it should be possible to set the stat as a string. Which should achievable via zod.
 // SkillProficiency {
 //   skill: string;
 //   baseStatName: string;
