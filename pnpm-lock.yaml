@@ -70,6 +70,9 @@ devDependencies:
   vitest:
     specifier: ^1.2.2
     version: 1.2.2(@types/node@20.11.0)
+  yaml:
+    specifier: ^2.3.4
+    version: 2.3.4
 
 packages:
 
