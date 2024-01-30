@@ -17,17 +17,18 @@
   }
 </script>
 
-<BaseContainerRect>
+<BaseContainerRect class=" min-w-fit">
   <div class="grid grid-cols-2 mb-2 gap-x-4">
-    <span class="my-0">HitDice</span>
+    <span >HitDice</span>
     <span>Used</span>
 
-    <span class="my-0" on:wheel|stopPropagation|preventDefault>
+    <span on:wheel|stopPropagation|preventDefault>
       <TextNumberInput bind:value={hitDice.max} min={1} />
       d
       <TextNumberInput bind:value={hitDice.diceType} min={1} />
     </span>
     <TextNumberInput
+      title="used hit dice"
       value={hitDice.used}
       min={0}
       max={hitDice.max}

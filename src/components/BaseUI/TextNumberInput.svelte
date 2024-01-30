@@ -76,29 +76,30 @@
     my-0
     text-center
     {$$restProps.class}"
-  style="max-width: {width};"
-  title={title ?? ""}
 >
   {#if showButtons}
-    <span
-      role="button"
+    <button
       tabindex="0"
       on:keypress={(e) => {
         if (e.key === "Enter") decrement();
       }}
       on:click={decrement}
       class="
-        focus:border-solid focus:border-0 focus:border-b-2
+        m-1
         font-bold focus:text-[var(--interactive-accent-hover)]
-        focus-visible:outline-0
         hover:cursor-pointer
+        !bg-transparent !border-none !px-1 !py-0
+        input-focus
         {hidden}"
+      aria-label={`decrement ${title}`} 
+      aria-hidden={showButtons && !edit ? "false" : "true"}
     >
       -
-    </span>
+    </button>
   {/if}
   {#if edit}
-    <input
+    <input    
+      title={title}
       bind:this={statInputRef}
       on:keypress={handleKeyPress}
       on:focusout={toggleEdit}
@@ -107,16 +108,21 @@
       bind:value
       {min}
       {max}
+      class="my-1 input-focus"
       style="max-width: {width};"
     />
   {:else}
     <span
+      title={title}
       tabindex="0"
       role="button"
       on:focus={toggleEdit}
       class="
-        focus:outline-1 focus:outline
-        py-1 h-[var(--input-height)]
+        inline-block
+        my-1
+        h-[var(--input-height)]
+        input-focus
+        py-1
         hover:cursor-text
         border-dotted border-0 border-b-2
         "
@@ -125,21 +131,23 @@
     </span>
   {/if}
   {#if showButtons}
-    <span
-      role="button"
+    <button
       tabindex="0"
       on:keypress={(e) => {
         if (e.key === "Enter") increment();
       }}
       on:click={increment}
       class="
-        focus:border-solid focus:border-0 focus:border-b-2
+        m-1
         font-bold focus:text-[var(--interactive-accent-hover)]
-        focus-visible:outline-0
         hover:cursor-pointer
+        !bg-transparent !border-none !px-1 !py-0
+        input-focus
         {hidden}"
+        aria-label={`increment ${title}`} 
+        aria-hidden={showButtons && !edit ? "false" : "true"}
     >
       +
-    </span>
+    </button>
   {/if}
 </span>
