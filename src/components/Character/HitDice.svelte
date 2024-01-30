@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
-  import type { HitDice } from "../../types/diceCombo";
+  import type { HitDice } from "../../types/hitDice";
   import { addDice } from "../../utils/actions";
   import BaseContainerRect from "../BaseUI/BaseContainerRect.svelte";
   import TextNumberInput from "../BaseUI/TextNumberInput.svelte";
@@ -9,6 +9,7 @@
 
   let toUse: number = 1;
   const dispatcher = createEventDispatcher();
+
 
   function onRoll(result: number) {
     hitDice.used += toUse;
@@ -22,14 +23,14 @@
     <span>Used</span>
 
     <span class="my-0" on:wheel|stopPropagation|preventDefault>
-      <TextNumberInput bind:value={hitDice.dice.quantity} min={1} />
+      <TextNumberInput bind:value={hitDice.max} min={1} />
       d
-      <TextNumberInput bind:value={hitDice.dice.diceType} min={1} />
+      <TextNumberInput bind:value={hitDice.diceType} min={1} />
     </span>
     <TextNumberInput
       value={hitDice.used}
       min={0}
-      max={hitDice.dice.quantity}
+      max={hitDice.max}
       showButtons
     />
   </div>
@@ -37,22 +38,20 @@
   <span
     class="mx-auto"
     use:addDice={{
-      diceType: hitDice.dice.diceType,
-      modifier: 0,
-      quantity: toUse,
+      dice: `${toUse}d${hitDice.diceType}`,
       onRollCallback: onRoll,
       label: "Roll selected number of hit die",
     }}
   >
     <input
       min={1}
-      max={hitDice.dice.quantity}
+      max={hitDice.max}
       type="number"
       bind:value={toUse}
       on:wheel|stopPropagation
       on:wheel|preventDefault={(e) => {
         if (e.deltaY > 0) toUse = Math.max(1, toUse - 1);
-        else toUse = Math.min(hitDice.dice.quantity, toUse + 1);
+        else toUse = Math.min(hitDice.max, toUse + 1);
       }}
     />
   </span>

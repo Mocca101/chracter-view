@@ -1,6 +1,5 @@
 import { DnDBaseSkills } from "../data/BaseSkills";
 import type { Check } from "../types/check";
-import type DiceCombo from "../types/diceCombo";
 import type { SkillProficiency } from "../types/proficiency";
 import type { Stat } from "../types/stats";
 
@@ -15,42 +14,6 @@ export function abilityToStatblock(check: Check) {
     [check.name]: check.proficiency
   }
 }
-
-export function diceComboToString(diceCombo: DiceCombo) {
-  return `${diceCombo.quantity}d${diceCombo.diceType}${
-    !(diceCombo.modifier) ? '' 
-    : (diceCombo.modifier >= 0 
-      ? '+ ' + diceCombo.modifier 
-      : diceCombo.modifier)}`
-}
-
-export function diceStringToDiceCombo(diceString: string): DiceCombo {
-  let quantity = 1;
-  let diceType = 8;
-  let modifier = 0;
-
-  let splitString = diceString.split("d");
-  quantity = parseInt(splitString[0]);
-
-  if(splitString[1].contains('+')) {
-    splitString = splitString[1].split('+');
-    diceType = parseInt(splitString[0]);
-    if(splitString[1]) {
-      modifier = parseInt(splitString[1]);
-    }
-  }
-  
-  if(splitString[1].contains('-')) {
-    splitString = splitString[1].split('-');
-    diceType = parseInt(splitString[0]);
-    if(splitString[1]) {
-      modifier = -parseInt(splitString[1]);
-    }
-  }
-
-  return { quantity, diceType, modifier };
-}
-
 
 export function sbProficenciesToProficiencies(statblockProficiencies: Array<Record<string, string|number>>): Array<SkillProficiency> {
   if(!statblockProficiencies) return [];

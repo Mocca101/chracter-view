@@ -10,9 +10,7 @@
 <p
   class={$$restProps.class}
   use:addDice={{
-    diceType: 20,
-    quantity: 1,
-    modifier: value,
+    dice: `1d20${value >= 0 ? "+" : ""}${value}`,
     label: `Roll ${modifierSource}`,
   }}
 >

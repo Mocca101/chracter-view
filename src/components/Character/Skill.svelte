@@ -23,11 +23,9 @@
 </script>
 
 <div
-  class="flex flex-row gap-1 items-center px-1 m-0 w-max h-5"
+  class="flex flex-row items-center h-5 gap-1 px-1 m-0 w-max"
   use:addDice={{
-    diceType: 20,
-    quantity: 1,
-    modifier: modifier,
+    dice: `1d20${modifier >= 0 ? "+" : ""}${modifier}`,
     label: `Roll ${check.name}`,
   }}
   data-testid="skill-container-{check.name}"

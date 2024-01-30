@@ -5,7 +5,7 @@ import type {BaseCheck } from "./check";
 //   skill: string;
 //   baseStatName: string;
 //   proficiencyState: number;
-//   dice?: DiceCombo;
+//   dice?: dice;
 // }
 
 export type SkillProficiency = {

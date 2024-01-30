@@ -3,23 +3,19 @@ import type ModifierCalc from "./modifier";
 import { type Stat } from "./stats";
 import type { RollMode } from "./types";
 import { dndModifierCalc } from "../data/ModifierFunctions";
-import type DiceCombo from "./diceCombo";
 
 export type BaseCheck = {
   name: string;
   stat: Stat;
-  dice: DiceCombo;
+  dice: string;
   modifierCalculation: ModifierCalc;
 }
 
 export const dndDefaultCheck: {
-  dice: DiceCombo,
+  dice: string,
   modifierCalculation: ModifierCalc
 } = {
-  dice: {
-    diceType: 20,
-    quantity: 1,
-  },
+  dice: "1d20",
   modifierCalculation: dndModifierCalc,
 }
 

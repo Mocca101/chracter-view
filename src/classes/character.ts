@@ -6,13 +6,13 @@ import type Background from "../types/background";
 import type Class from "../types/class";
 import type Race from "../types/race";
 import { DnDBaseSkills } from "../data/BaseSkills";
-import type { HitDice } from "../types/diceCombo";
+import type { HitDice } from "../types/hitDice";
 import { getAC } from "../utils/armorHelper";
 import { type Armor, } from "../types/armorTypes";
 import type { Sense, Senses } from "../types/senses";
 import type { Proficiencies } from "../types/proficiency";
 import type { Statblock } from "../types/zod/zodSchemas";
-import { abilityToStatblock, diceComboToString, diceStringToDiceCombo, sbProficenciesToProficiencies, statToStatblockStat } from "../utils/conversions";
+import { abilityToStatblock, sbProficenciesToProficiencies, statToStatblockStat } from "../utils/conversions";
 import { defaultDndStats } from "../data/baseStats";
 import type { HeadingSection } from "../utils/file/fileSections";
 import { createHeading } from "../utils/file/fileSections";
@@ -44,10 +44,8 @@ export default class Character implements Entity, Senses, Proficiencies {
     temporary: 0,
   };
   hitDice: HitDice = {
-    dice: {
-      diceType: 10,
-      quantity: 1
-    },
+    diceType: 8,
+    max: 1,
     used: 0,
   };
 
@@ -170,7 +168,7 @@ export default class Character implements Entity, Senses, Proficiencies {
       currentHP: this.hitPoints.current,
       tempHP: this.hitPoints.temporary,
 
-      hit_dice: diceComboToString(this.hitDice.dice),
+      hit_dice: `${this.hitDice.max}d${this.hitDice.diceType}`,
 
       deathSaveSuccesses: this.deathSaveSuccesses,
       deathSaveFailures: this.deathSaveFailures,
@@ -250,7 +248,8 @@ export default class Character implements Entity, Senses, Proficiencies {
 
     if (statblock.hit_dice) {
       this.hitDice = {
-        dice: diceStringToDiceCombo(statblock.hit_dice),
+        max: parseInt(statblock.hit_dice.split("d")[0]),
+        diceType: parseInt(statblock.hit_dice.split("d")[1]),
         used: 0,
       };
     }

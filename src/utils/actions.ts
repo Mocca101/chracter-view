@@ -3,7 +3,6 @@
 import type ObsidianCharacterView from "../../main";
 import mainStore from "../stores/mainStore";
 import { setIcon } from "obsidian";
-import type DiceCombo from "../types/diceCombo";
 
 let plugin: ObsidianCharacterView;
 mainStore.plugin.subscribe((p) => (plugin = p));
@@ -20,7 +19,13 @@ export const focusEnd = (element: HTMLElement) => {
 
 }
 
-export const addDice = (element: HTMLElement, diceOptions: DiceCombo & { label: string, onRollCallback?:(result:number) => void }) => {
+
+type DiceOptions = {
+  dice:string,
+  label?: string,
+  onRollCallback?:(result:number) => void
+}
+export const addDice = (element: HTMLElement, diceOptions: DiceOptions) => {
   const results = [];
   const dicePlugin = plugin.diceRollerPlugin;
 
@@ -30,10 +35,12 @@ export const addDice = (element: HTMLElement, diceOptions: DiceCombo & { label: 
 
   let diceRoller;
   plugin.diceRollerPlugin.getRoller(
-    `${diceOptions.quantity ?? 1}d${diceOptions.diceType ?? 1}${(diceOptions.modifier ?? 0) >= 0 ? `+${diceOptions.modifier}` : diceOptions.modifier}`
+    diceOptions.dice
   ).then(res => {
     diceRoller = res;
   });
+
+  let callback = diceOptions.onRollCallback;
 
   const diceButton = element.createEl('button');
   diceButton.addClasses(['clickable-icon','inline-block']);
@@ -44,14 +51,16 @@ export const addDice = (element: HTMLElement, diceOptions: DiceCombo & { label: 
   diceButton.onClickEvent(async () => {
     if(!diceRoller) return;
     results.push(await diceRoller.roll(true));
-    if(!diceOptions.onRollCallback) return;
-    diceOptions.onRollCallback(results.last());
+    if(!callback) return;
+    callback(results.last());
   })
 
   return {
-		update: (diceOptions: DiceCombo) => {
+		update: (diceOptions: DiceOptions) => {
+      console.log('update dice', diceOptions.dice);
+      callback = diceOptions.onRollCallback;
       plugin.diceRollerPlugin.getRoller(
-        `${diceOptions.quantity ?? 1}d${diceOptions.diceType}${diceOptions.modifier >= 0 ? `+${diceOptions.modifier}` : diceOptions.modifier}`
+        diceOptions.dice
       ).then(res => diceRoller = res);
     },
 		destroy: () => {
