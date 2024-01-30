@@ -57,7 +57,6 @@ export const addDice = (element: HTMLElement, diceOptions: DiceOptions) => {
 
   return {
 		update: (diceOptions: DiceOptions) => {
-      console.log('update dice', diceOptions.dice);
       callback = diceOptions.onRollCallback;
       plugin.diceRollerPlugin.getRoller(
         diceOptions.dice
