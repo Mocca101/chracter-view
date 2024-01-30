@@ -47,6 +47,7 @@ export default class Character implements Entity, Senses, Proficiencies {
     diceType: 8,
     max: 1,
     used: 0,
+    modifer: '',
   };
 
   background: Background;
@@ -168,7 +169,7 @@ export default class Character implements Entity, Senses, Proficiencies {
       currentHP: this.hitPoints.current,
       tempHP: this.hitPoints.temporary,
 
-      hit_dice: `${this.hitDice.max}d${this.hitDice.diceType}`,
+      hit_dice: `${this.hitDice.max}d${this.hitDice.diceType}${this.hitDice.modifer}`,
 
       deathSaveSuccesses: this.deathSaveSuccesses,
       deathSaveFailures: this.deathSaveFailures,
@@ -247,10 +248,13 @@ export default class Character implements Entity, Senses, Proficiencies {
     this.hitPoints.temporary = statblock.tempHP ?? 0;
 
     if (statblock.hit_dice) {
+      const [max, diceTypeAndModifier] = statblock.hit_dice.split('d');
+      const [diceType, modifier] = diceTypeAndModifier.split(/(?=[+\-*/])/);
       this.hitDice = {
-        max: parseInt(statblock.hit_dice.split("d")[0]),
-        diceType: parseInt(statblock.hit_dice.split("d")[1]),
+        max: parseInt(max),
+        diceType: parseInt(diceType),
         used: 0,
+        modifer: modifier,
       };
     }
   }

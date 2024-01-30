@@ -21,7 +21,7 @@ const editedStatblock: string =
   "name: Kuini_base_spec\nalignment: True Neutral\ntype: aberration\nsubtype: \"\"\ncr: 18\nac: 17\nspeed: 10 ft., swim 40 ft.\n" +
   "stats:\n  - Strength: 20\n  - Dexterity: 9\n  - Constitution: 15\n  - Intelligence: 4\n  - Wisdom: 15\n  - Charisma: 18\n" +
   "skillProficiencies:\n  - Acrobatics: 1\n  - Animal Handling: 0\n  - Arcana: 2\n  - Athletics: 0\n  - Deception: 2\n  - History: 0\n  - Insight: 2\n  - Intimidation: 0\n  - Investigation: 0\n  - Medicine: 0\n  - Nature: 0\n  - Perception: 0\n  - Performance: 0\n  - Persuasion: 0\n  - Religion: 0\n  - Sleight of Hand: 0\n  - Stealth: 0\n  - Survival: 2\n" +
-  "hp: 135\nhit_dice: 12d12+ 36\n" +
+  "hp: 135\nhit_dice: 12d12+36\n" +
   "senses: darkvision 120 ft., passive Perception 20\n" +
   "languages: Deep Speech, telepathy 120 ft.\n" +
   "dice: true\nrender: true\n" +
