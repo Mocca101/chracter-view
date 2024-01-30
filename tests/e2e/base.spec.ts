@@ -1,8 +1,8 @@
 import { ElectronApplication, Page, _electron as electron, test, expect } from '@playwright/test'
 import 'dotenv/config'
-import { BaseStats } from '../src/data/BaseStats';
-import { DnDBaseSkills } from '../src/data/BaseSkills';
-import { kuiniString } from './testUtils';
+import { BaseStats } from '../../src/data/BaseStats';
+import { DnDBaseSkills } from '../../src/data/BaseSkills';
+import { kuiniString } from '../testUtils';
 
 const vaultName = process.env.VAULTNAME;
 const pathToExe = process.env.TO_EXE;

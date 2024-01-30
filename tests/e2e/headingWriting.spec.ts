@@ -1,7 +1,7 @@
 import { ElectronApplication, Page, _electron as electron } from '@playwright/test'
 import { test, expect } from '@playwright/test'
 import 'dotenv/config'
-import { kuiniWithAddedSubheading, kuiniString, newParagraphString, newSubheadingString, defaultPersonalityParagraph, editedParagraphString, kuiniWithEditedParagraph } from './testUtils';
+import { kuiniWithAddedSubheading, kuiniString, newParagraphString, newSubheadingString, defaultPersonalityParagraph, editedParagraphString, kuiniWithEditedParagraph } from '../testUtils';
 import fs from 'fs';
 
 const vaultName = process.env.VAULTNAME;
