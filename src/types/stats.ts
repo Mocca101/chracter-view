@@ -6,5 +6,5 @@ export interface Stat {
 }
 
 export function isStat(obj: any): obj is Stat {
-  return obj.value !== undefined && obj.name;
+  return typeof obj.value === 'number' && obj.value !== undefined && obj.name;
 }
