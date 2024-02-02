@@ -123,9 +123,11 @@ function writeBackSection(section: Section, splitText: [string,string]) : [strin
 
   if(!textEnd) console.error(`No text end found for section ${section.text}`);
 
-  let pre;
-  [pre, textEnd] = splitOnFirst(textEnd, section.text);
-  textStart += pre + (section.editedText ?? section.text);
+  let splitTextStart;
+  [splitTextStart, textEnd] = splitOnFirst(textEnd, section.text);
+  textStart += splitTextStart;
+  if(!section.text) textStart += '\n';
+  textStart += section.editedText ?? section.text;
 
   section.editedText = null;
   if(section.type !== 'heading') return [textStart, textEnd];
