@@ -85,13 +85,20 @@ export default class Character implements Entity, Senses, Proficiencies {
 
   // --- End of Personality ---
 
-  keySenses: Sense[] = [];
-  additionalSenses: string[] = [""];
-
 
   // Plain text 
 
   headings: HeadingSection[] = [];
+
+  notes: HeadingSection = createHeading(2, "Notes", "Default Notes");
+
+
+  // --- Senses ---
+
+  keySenses: Sense[] = [];
+  additionalSenses: string[] = [""];
+
+
 
   private assignSenses() {
     this.keySenses = [

@@ -27,6 +27,10 @@ export default class CharacterViewSettings extends PluginSettingTab {
         this.setupCharTagSetting(sectionParent);
 
         this.setupDebugModeSetting(sectionParent);
+
+        this.personalityHeadingSetting(sectionParent);
+
+        this.notesHeadingSetting(sectionParent);
     }
 
     private setupDebugModeSetting(sectionParent: HTMLDivElement) {
@@ -43,15 +47,45 @@ export default class CharacterViewSettings extends PluginSettingTab {
     }
 
     setupDescriptionHeadingSetting(container: HTMLElement) {
-        const settingDescrText = new Setting(container)
+        const settingDescrText = new Setting(container);
         
-        settingDescrText.setName("Heading of Description");
+        settingDescrText.setName("Heading for Description");
         settingDescrText.setDesc("The text of the heading of the description in the Character file.");
         settingDescrText.addText(text => {
             text.setPlaceholder("Description");
             text.setValue(this.plugin.settings.descriptionHeading);
             text.onChange(async (value) => {
                 this.plugin.settings.descriptionHeading = value;
+                await this.plugin.saveSettings();
+            });
+        });
+    }
+
+    personalityHeadingSetting(container: HTMLElement) {
+        const settingPersonalityText = new Setting(container);
+        
+        settingPersonalityText.setName("Heading for Personality");
+        settingPersonalityText.setDesc("The text of the heading of the personality in the Character file.");
+        settingPersonalityText.addText(text => {
+            text.setPlaceholder("Personality");
+            text.setValue(this.plugin.settings.personalityHeading);
+            text.onChange(async (value) => {
+                this.plugin.settings.personalityHeading = value;
+                await this.plugin.saveSettings();
+            });
+        });
+    }
+
+    notesHeadingSetting(container: HTMLElement) {
+        const settingNotesText = new Setting(container);
+        
+        settingNotesText.setName("Heading for Notes");
+        settingNotesText.setDesc("The text of the heading of the notes in the Character file.");
+        settingNotesText.addText(text => {
+            text.setPlaceholder("Notes");
+            text.setValue(this.plugin.settings.notesHeading);
+            text.onChange(async (value) => {
+                this.plugin.settings.notesHeading = value;
                 await this.plugin.saveSettings();
             });
         });

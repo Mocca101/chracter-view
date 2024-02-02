@@ -69,15 +69,13 @@
 
     sectionedCharacterFile = new CharacterFile(activeCharacter, parsedFile);
 
-    if (sectionedCharacterFile.description) {
-      char.description = sectionedCharacterFile.description;
-    }
+    char.description = sectionedCharacterFile.description ?? char.description;
+    char.personality = sectionedCharacterFile.personality ?? char.personality;
+    char.notes = sectionedCharacterFile.notes ?? char.notes;
+    char.headings = [...char.headings]
 
     assignFromStatblock(sectionedCharacterFile);
 
-    char.headings = [...char.headings]
-    const personality = sectionedCharacterFile.personality;
-    if(personality) char.personality = sectionedCharacterFile.personality;
 
     fileWasUpdated = false;
   }
@@ -215,6 +213,8 @@
       <PlainHeading bind:heading={char.personality} />
     </div>
   </div>
+
+  <CollapsibleHeading bind:heading={char.notes} />
 
   {#if p.settings.debugMode}
     <!-- TODO: Implement selection via tag -->

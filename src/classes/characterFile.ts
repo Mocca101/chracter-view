@@ -37,7 +37,12 @@ export default class CharacterFile {
 
   get personality() : HeadingSection {
     if(this.sections.length < 1) return null;
-    return headingByName(this.sections, personalityHeadingOptions.title);
+    return headingByName(this.sections, this.p.settings.personalityHeading);
+  }
+
+  get notes() : HeadingSection {
+    if(this.sections.length < 1) return null;
+    return headingByName(this.sections, this.p.settings.notesHeading);
   }
 
   /**
@@ -66,9 +71,9 @@ export default class CharacterFile {
       // Replace the statblock with the new one
       fileString = fileString.replace(statblockString, stringifyYaml(returnStatblock));
 
-      if(sectionHasChanged(character.description))fileString = writeBackSection(character.description, ['', fileString]).join('');
-
+      if(sectionHasChanged(character.description))fileString = writeBackSection(character.description, ['', fileString]).join(''); 
       if(sectionHasChanged(character.personality)) fileString = writeBackSection(character.personality, ['', fileString]).join('');
+      if(sectionHasChanged(character.notes)) fileString = writeBackSection(character.notes, ['', fileString]).join('');
 
       character.headings.forEach(heading => {
         if(!sectionHasChanged(heading)) return;

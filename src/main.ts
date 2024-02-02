@@ -9,6 +9,8 @@ interface ObsidianCharacterViewSettings {
 	characterTag: string;
 	characterTemplatePath: string; // full path from vault root, including the .md extension
 	descriptionHeading: string;
+	personalityHeading: string;
+	notesHeading: string;
 	debugMode: boolean;
 }
 
@@ -16,6 +18,8 @@ const DEFAULT_SETTINGS: ObsidianCharacterViewSettings = {
 	characterTag: "#dnd-character",
 	characterTemplatePath: "templates/char_template.md",
 	descriptionHeading: "Description",
+	personalityHeading: "Personality",
+	notesHeading: "Notes",
 	debugMode: false
 };
 
