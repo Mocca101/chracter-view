@@ -20,16 +20,6 @@ export const compose = <T>(fn1: (a: T) => T, ...fns: Array<(a: T) => T>) =>
 fns.reduce((prevFn, nextFn) => value => prevFn(nextFn(value)), fn1);
 
 
-
-export function statblockFromString(fileString: string): string {
-  const startString = '```statblock';
-  const endString = '```';
-  const statblockStart = fileString.indexOf(startString);
-  const statblockEnd = fileString.indexOf(endString , statblockStart + startString.length);
-
-  return fileString.slice(statblockStart + startString.length, statblockEnd);
-}
-
 export function commaStringToArray(str: string): string[] {
   return str.split(',').map(item => item.trim());
 }
