@@ -62,7 +62,11 @@ export const kuiniString: string =
   originalStatblock
 
 // Edited
-  
+
+const notesSection = 
+"\n## Notes\n" +
+"Default Notes";
+
 export const newSubheadingString: string = "Test Subheading";
 export const newParagraphString: string = "Test Paragraph";
 
@@ -71,13 +75,14 @@ export const kuiniWithAddedSubheading: string =
   "\n[[Dungeons and Dragons|DnD]] - [[Character]]\n" +
   "\n### Description\n\nA non-default #dnd-character.\n" +
   defaultPersonality +
-  // Added a new subheading
-  `\n#### ${newSubheadingString}\n` +
-  newParagraphString +
-  "\n" +
   // End
   "\n### Character\n\n\nclass:: Fighter, Barbarian, Wizard\nrace:: Elf\ngender:: ♂\n\n" +
-  editedStatblock
+  editedStatblock +
+  notesSection +
+  // Added a new subheading
+  `\n### ${newSubheadingString}\n` +
+  newParagraphString + 
+  "\n";
 
 export const editedParagraphString: string = "Edited Paragraph";
 const editedPersonality: string =  
@@ -93,5 +98,7 @@ export const kuiniWithEditedParagraph: string =
   editedPersonality +
   // End
   "\n### Character\n\n\nclass:: Fighter, Barbarian, Wizard\nrace:: Elf\ngender:: ♂\n\n" +
-  editedStatblock
+  editedStatblock + 
+  notesSection + 
+  "\n";
 
