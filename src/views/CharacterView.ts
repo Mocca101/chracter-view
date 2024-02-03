@@ -37,6 +37,7 @@ export class CharacterView extends ItemView {
 
 	async onOpen() {
 		mainStore.plugin.subscribe((plugin) => (this.p = plugin));
+		// @ts-expect-error - `.plugins` is a private property
 		this.p.diceRollerPlugin = this.p.app.plugins.getPlugin("obsidian-dice-roller");
 		this.component = new CharacterMainSvelte({
 			target: this.contentEl,
