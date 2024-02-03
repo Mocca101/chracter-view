@@ -60,8 +60,8 @@ export class SuggestionDropdown
 			this.target.dispatchEvent(new CustomEvent("open-suggest", { detail: this.target.value}));
 		});
 
-		this.target.addEventListener("keydown", (ev) => {this.#onKeyDown(ev)});
-		this.target.addEventListener("keyup", (ev) => {this.#onKeyUp(ev)});
+		this.target.addEventListener("keydown", (ev: KeyboardEvent) => {this.#onKeyDown(ev)});
+		this.target.addEventListener("keyup", (ev: KeyboardEvent) => {this.#onKeyUp(ev)});
 
 		this.target.addEventListener("blur", () => {this.#cleanUp()});
 		this.target.addEventListener("change", () => {this.#cleanUp()});
