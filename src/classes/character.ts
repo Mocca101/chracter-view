@@ -179,7 +179,7 @@ export default class Character implements Entity, Senses, Proficiencies {
       currentHP: this.hitPoints.current,
       tempHP: this.hitPoints.temporary,
 
-      hit_dice: `${this.hitDice.max}d${this.hitDice.diceType}${this.hitDice.modifer}`,
+      hit_dice: `${this.hitDice.max}d${this.hitDice.diceType}${this.hitDice.modifer ?? ''}`,
 
       deathSaveSuccesses: this.deathSaveSuccesses,
       deathSaveFailures: this.deathSaveFailures,

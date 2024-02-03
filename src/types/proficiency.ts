@@ -1,12 +1,7 @@
 import type {BaseCheck } from "./check";
 
-// TODO: IDEA: -> Actually I think having the base stat as type is good, but it should be possible to set the stat as a string. Which should achievable via zod.
-// SkillProficiency {
-//   skill: string;
-//   baseStatName: string;
-//   proficiencyState: number;
-//   dice?: dice;
-// }
+// TODO: consolidate SkillProficiency and Check
+// relevant files: src/types/check.ts, src/types/proficiency.ts, src/utils/conversions.ts, src/data/BaseSkills.ts
 
 export type SkillProficiency = {
   check: BaseCheck;
