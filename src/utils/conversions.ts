@@ -1,6 +1,5 @@
 import { DnDBaseSkills } from "../data/BaseSkills";
 import type { Check } from "../types/check";
-import type { SkillProficiency } from "../types/proficiency";
 import type { Stat } from "../types/stats";
 
 export function statToStatblockStat(stat: Stat) {
@@ -15,10 +14,10 @@ export function abilityToStatblock(check: Check) {
   }
 }
 
-export function sbProficenciesToProficiencies(statblockProficiencies: Array<Record<string, string|number>>): Array<SkillProficiency> {
+export function sbProficenciesToCheck(statblockProficiencies: Array<Record<string, string|number>>): Array<Check> {
   if(!statblockProficiencies) return [];
   if(!Array.isArray(statblockProficiencies)) return [];
-  const proficiencies: Array<SkillProficiency> = [];
+  const proficiencies: Array<Check> = [];
 
   const baseProficiencies = DnDBaseSkills.map(skill => skill.name.toLowerCase());
 
@@ -30,8 +29,8 @@ export function sbProficenciesToProficiencies(statblockProficiencies: Array<Reco
     if(!baseProficiencies.includes(proficiencyName.toLowerCase())) continue;
     if(typeof proficiencyValue !== 'number' && typeof proficiencyValue !=='string') continue;
     proficiencies.push({
-      check: DnDBaseSkills[baseProficiencies.indexOf(proficiencyName.toLowerCase())],
-      proficiencyState: statblockProficiencyToProficiencyState(proficiencyValue)
+      ...DnDBaseSkills[baseProficiencies.indexOf(proficiencyName.toLowerCase())],
+      proficiency: statblockProficiencyToProficiencyState(proficiencyValue)
     });
 
   }

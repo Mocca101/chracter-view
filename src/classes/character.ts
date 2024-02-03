@@ -12,7 +12,7 @@ import { type Armor, } from "../types/armorTypes";
 import type { Sense, Senses } from "../types/senses";
 import type { Proficiencies } from "../types/proficiency";
 import type { Statblock } from "../types/zod/zodSchemas";
-import { abilityToStatblock, sbProficenciesToProficiencies, statToStatblockStat } from "../utils/conversions";
+import { abilityToStatblock, sbProficenciesToCheck, statToStatblockStat } from "../utils/conversions";
 import { defaultDndStats } from "../data/baseStats";
 import type { HeadingSection } from "../utils/file/fileSections";
 import { createHeading } from "../utils/file/fileSections";
@@ -39,7 +39,7 @@ export default class Character implements Entity, Senses, Proficiencies {
 
   resistances: string[] = [];
 
-  skillProficiencies: Check[] = [];
+  skills: Check[] = [];
 
   hitPoints: HitPoints = {
     max: 12,
@@ -104,15 +104,15 @@ export default class Character implements Entity, Senses, Proficiencies {
     this.keySenses = [
       {
         name: "Passive Wisdom (Perception)",
-        base: this.skillProficiencies.find(ability => ability.name === "Perception") as Check,
+        base: this.skills.find(ability => ability.name === "Perception") as Check,
       },
       {
         name: "Passive Wisdom (Insight)",
-        base: this.skillProficiencies.find(ability => ability.name === "Insight") as Check,
+        base: this.skills.find(ability => ability.name === "Insight") as Check,
       },
       {
         name: "Passive Intelligence (Investigation)",
-        base: this.skillProficiencies.find(ability => ability.name === "Investigation") as Check,
+        base: this.skills.find(ability => ability.name === "Investigation") as Check,
       },
     ]
   }
@@ -136,7 +136,7 @@ export default class Character implements Entity, Senses, Proficiencies {
     this.stats = stats ??  defaultDndStats();
     this.abilityDCs[0] = this.stats[0];
 
-    this.skillProficiencies = DnDBaseSkills.map(skill => {
+    this.skills = DnDBaseSkills.map(skill => {
       return {
         ...skill,
         stat: this.stats.find(stat => stat.name === skill.stat.name),
@@ -185,7 +185,7 @@ export default class Character implements Entity, Senses, Proficiencies {
       deathSaveFailures: this.deathSaveFailures,
 
       stats: this.stats.map(stat => statToStatblockStat(stat)),
-      skillProficiencies: this.skillProficiencies.map(ability => abilityToStatblock(ability)),
+      skillProficiencies: this.skills.map(ability => abilityToStatblock(ability)),
 
       // TODO: used dice
       languages: this.languages.join(', '),
@@ -288,14 +288,14 @@ export default class Character implements Entity, Senses, Proficiencies {
 
   private skillProficiencyFromStatblock(statblock: Statblock) {
     if (statblock.skillProficiencies) {
-      const skillProficiencies = sbProficenciesToProficiencies(
+      const skill = sbProficenciesToCheck(
         statblock.skillProficiencies
       );
 
-      skillProficiencies.forEach((proficiency) => {
-        this.skillProficiencies.map((ability) => {
-          if (ability.name === proficiency.check.name)
-            ability.proficiency = proficiency.proficiencyState;
+      skill.forEach((skill) => {
+        this.skills.map((ability) => {
+          if (ability.name === skill.name)
+            ability.proficiency = skill.proficiency;
           return ability;
         });
       });

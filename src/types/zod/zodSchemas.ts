@@ -2,6 +2,15 @@ import { string, z } from "zod";
 
 export const zSkillProficiency = z.record(z.string(), z.string().or(z.number()));
 
+const skill = z.record(
+  z.string(),
+  z.object({
+    stat: z.string(),
+    proficiencyState: z.number().default(0),
+    dice: string().default("1d20"),
+  })
+)
+
 
 /** 
  * Structure:
@@ -35,7 +44,8 @@ export const zStatblock = z.object({
 
   // Entity Stats
   stats: 
-    z.array(z.number().default(10)).optional().or(
+    z.array(z.number().default(10)).optional()
+    .or(
     z.array(z.record(z.number().default(10)).optional())
   ),
   skillProficiencies: z.array(zSkillProficiency).optional(),

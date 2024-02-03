@@ -182,7 +182,7 @@
 
   <div class="flex gap-4">
     <div class="flex flex-col gap-1 text-center">
-      {#each char.skillProficiencies as skill, i}
+      {#each char.skills as skill, i}
         <SkillComponent
           modifierCalculation={char.modifierCalculation}
           bind:check={skill}
