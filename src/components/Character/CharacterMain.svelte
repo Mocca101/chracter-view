@@ -181,6 +181,7 @@
   <EntityView bind:entity={char} />
 
   <div class="flex gap-4">
+  {#if char.skills}
     <div class="flex flex-col gap-1 text-center">
       {#each char.skills as skill, i}
         <SkillComponent
@@ -190,6 +191,7 @@
         />
       {/each}
     </div>
+  {/if}
 
     <div>
       <ProficienciesUi bind:proficiencies={char} />

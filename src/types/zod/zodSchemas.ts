@@ -1,15 +1,15 @@
 import { string, z } from "zod";
 
-export const zSkillProficiency = z.record(z.string(), z.string().or(z.number()));
-
-const skill = z.record(
+const zSkill = z.record(
   z.string(),
   z.object({
     stat: z.string(),
-    proficiencyState: z.number().default(0),
+    proficiency: z.number().default(0),
     dice: string().default("1d20"),
   })
 )
+
+export type ZSkill = z.infer<typeof zSkill>;
 
 
 /** 
@@ -48,7 +48,7 @@ export const zStatblock = z.object({
     .or(
     z.array(z.record(z.number().default(10)).optional())
   ),
-  skillProficiencies: z.array(zSkillProficiency).optional(),
+  skills: z.array(zSkill).optional(),
   
   
   hp: z.number().optional(),

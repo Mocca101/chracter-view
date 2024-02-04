@@ -185,7 +185,7 @@ export default class Character implements Entity, Senses, Proficiencies {
       deathSaveFailures: this.deathSaveFailures,
 
       stats: this.stats.map(stat => statToStatblockStat(stat)),
-      skillProficiencies: this.skills.map(ability => abilityToStatblock(ability)),
+      skills: this.skills.map(ability => abilityToStatblock(ability)),
 
       // TODO: used dice
       languages: this.languages.join(', '),
@@ -221,7 +221,7 @@ export default class Character implements Entity, Senses, Proficiencies {
     if (statblock.deathSaveFailures) this.deathSaveFailures = statblock.deathSaveFailures.slice(0, 3);
 
     this.statsFromStatblock(statblock);
-    this.skillProficiencyFromStatblock(statblock);
+    this.skills = this.skillProficiencyFromStatblock(statblock, this.stats);
 
 
     if (statblock.languages) {
@@ -286,20 +286,17 @@ export default class Character implements Entity, Senses, Proficiencies {
     }
   }
 
-  private skillProficiencyFromStatblock(statblock: Statblock) {
-    if (statblock.skillProficiencies) {
-      const skill = sbProficenciesToCheck(
-        statblock.skillProficiencies
+  private skillProficiencyFromStatblock(statblock: Statblock, stats: Stat[]): Check[] {
+    console.log(statblock)
+    if (statblock.skills) {
+      const skills = sbProficenciesToCheck(
+        statblock.skills,
+        stats
       );
-
-      skill.forEach((skill) => {
-        this.skills.map((ability) => {
-          if (ability.name === skill.name)
-            ability.proficiency = skill.proficiency;
-          return ability;
-        });
-      });
+      console.log(skills);
+      return skills;
     }
+    return [];
   }
 
 }

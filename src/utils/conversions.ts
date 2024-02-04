@@ -1,6 +1,7 @@
 import { DnDBaseSkills } from "../data/BaseSkills";
 import type { Check } from "../types/check";
 import type { Stat } from "../types/stats";
+import type { ZSkill } from "../types/zod/zodSchemas";
 
 export function statToStatblockStat(stat: Stat) {
   return { 
@@ -8,32 +9,32 @@ export function statToStatblockStat(stat: Stat) {
   }
 }
 
-export function abilityToStatblock(check: Check) {
+export function abilityToStatblock(check: Check) : ZSkill {
   return {
-    [check.name]: check.proficiency
+    [check.name]: {
+      stat: check.stat.name.slice(0, 3),
+      proficiency: check.proficiency,
+    }
   }
 }
 
-export function sbProficenciesToCheck(statblockProficiencies: Array<Record<string, string|number>>): Array<Check> {
+export function sbProficenciesToCheck(statblockProficiencies: Array<ZSkill>, stats: Stat[]): Array<Check> {
   if(!statblockProficiencies) return [];
   if(!Array.isArray(statblockProficiencies)) return [];
   const proficiencies: Array<Check> = [];
 
-  const baseProficiencies = DnDBaseSkills.map(skill => skill.name.toLowerCase());
-
-  for(let i = 0; i < statblockProficiencies.length; i++) {
-    const proficiency = statblockProficiencies[i];
-    const proficiencyName = Object.keys(proficiency)[0].toLowerCase();
-    const proficiencyValue = Object.values(proficiency)[0];
-
-    if(!baseProficiencies.includes(proficiencyName.toLowerCase())) continue;
-    if(typeof proficiencyValue !== 'number' && typeof proficiencyValue !=='string') continue;
-    proficiencies.push({
-      ...DnDBaseSkills[baseProficiencies.indexOf(proficiencyName.toLowerCase())],
-      proficiency: statblockProficiencyToProficiencyState(proficiencyValue)
-    });
-
-  }
+  statblockProficiencies.forEach(skill => {
+    const skillName = Object.keys(skill)[0];
+    const stat = stats.find(stat => stat.name.toLowerCase().includes(skill[skillName].stat.toLowerCase()));
+    console.log('sbProficenciesToCheck -> stat', skillName, stat, stats, skill);
+    const check: Check = {
+      name: skillName,
+      stat: stat,
+      dice: skill[skillName].dice ?? "1d20",
+      proficiency: skill[skillName].proficiency ?? 0,
+    }  
+    proficiencies.push(check);
+  });
   return proficiencies;
 }
 
